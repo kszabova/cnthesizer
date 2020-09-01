@@ -1,6 +1,6 @@
 ﻿namespace Cnthesizer
 {
-	partial class Form1
+	partial class CnthesizerForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -28,10 +28,19 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
+			this.SuspendLayout();
+			// 
+			// CnthesizerForm
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
-			this.Text = "Form1";
+			this.KeyPreview = true;
+			this.Name = "CnthesizerForm";
+			this.Text = "#Cnthesizer";
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CnthesizerForm_KeyDown);
+			this.ResumeLayout(false);
+
 		}
 
 		#endregion
