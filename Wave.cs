@@ -19,15 +19,15 @@ namespace Cnthesizer
 		{
 			foreach (Frequency frequency in Enum.GetValues(typeof(Frequency)))
 			{
-				byte[] wave = CreateWave(frequency);
+				byte[] wave = CreateWave(frequency, SAMPLE_RATE);
 				Waves.Add(wave);
 			}
 		}
 
 
-		public static byte[] A = CreateWave(Frequency.B);
+		public static byte[] A = CreateWave(Frequency.C1, SAMPLE_RATE);
 
-		private static byte[] CreateWave(Frequency frequencyCode, int length = 44100)
+		private static byte[] CreateWave(Frequency frequencyCode, int length)
 		{
 			short[] wave = new short[length];
 			byte[] binaryWave = new byte[length * sizeof(short)];
