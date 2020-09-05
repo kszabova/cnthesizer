@@ -38,7 +38,9 @@
 			this.KeyPreview = true;
 			this.Name = "CnthesizerForm";
 			this.Text = "#Cnthesizer";
+			this.Load += new System.EventHandler(this.CnthesizerForm_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CnthesizerForm_KeyDown);
+			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CnthesizerForm_KeyUp);
 			this.ResumeLayout(false);
 
 		}

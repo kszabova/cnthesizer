@@ -10,14 +10,15 @@ using System.Windows.Forms;
 using System.Media;
 using System.IO;
 
+using NAudio.Wave;
+using NAudio.Mixer;
+
 namespace Cnthesizer
 {
 	public partial class CnthesizerForm : Form
 	{
-		private const int SAMPLE_RATE = 44100;
-		private const short BITS_PER_SAMPLE = 16;
-
-		private NAudio.Wave.DirectSoundOut output = new NAudio.Wave.DirectSoundOut();
+		private WaveMixerStream32 mixer;
+		private DirectSoundOut output;
 
 		public CnthesizerForm()
 		{
@@ -30,119 +31,127 @@ namespace Cnthesizer
 			{
 				case Keys.A:
 					{
-						WaveFileReaders.C0.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.C0));
+						//WaveChannels.A.Position = 0;
+						WaveFileReaders.A.Position = 0;
+						mixer.AddInputStream(WaveChannels.C0);
+						//output.Init(new WaveChannel32(WaveFileReaders.A));
 						break;
 					}
 				case Keys.S:
 					{
 						WaveFileReaders.D.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.D));
+						mixer.AddInputStream(WaveChannels.D);
 						break;
 					}
 				case Keys.D:
 					{
 						WaveFileReaders.E.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.E));
+						mixer.AddInputStream(WaveChannels.E);
 						break;
 					}
 				case Keys.F:
 					{
 						WaveFileReaders.F.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.F));
+						mixer.AddInputStream(WaveChannels.F);
 						break;
 					}
 				case Keys.G:
 					{
 						WaveFileReaders.G.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.G));
+						mixer.AddInputStream(WaveChannels.G);
 						break;
 					}
 				case Keys.H:
 					{
 						WaveFileReaders.A.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.A));
+						mixer.AddInputStream(WaveChannels.A);
 						break;
 					}
 				case Keys.J:
 					{
 						WaveFileReaders.B.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.B));
+						mixer.AddInputStream(WaveChannels.B);
 						break;
 					}
 				case Keys.K:
 					{
 						WaveFileReaders.C1.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.C1));
+						mixer.AddInputStream(WaveChannels.C1);
 						break;
 					}
 				default:
 					{
 						WaveFileReaders.A.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.A));
+						mixer.AddInputStream(WaveChannels.A);
 						break;
 					}
 			}
 
+			//output.Play();
+
+		}
+
+		private void CnthesizerForm_KeyUp(object sender, KeyEventArgs e)
+		{
+			switch (e.KeyCode)
+			{
+				case Keys.A:
+					{
+						mixer.RemoveInputStream(WaveChannels.C0);
+						break;
+					}
+				case Keys.S:
+					{
+						mixer.RemoveInputStream(WaveChannels.D);
+						break;
+					}
+				case Keys.D:
+					{
+						mixer.RemoveInputStream(WaveChannels.E);
+						break;
+					}
+				case Keys.F:
+					{
+						mixer.RemoveInputStream(WaveChannels.F);
+						break;
+					}
+				case Keys.G:
+					{
+						mixer.RemoveInputStream(WaveChannels.G);
+						break;
+					}
+				case Keys.H:
+					{
+						mixer.RemoveInputStream(WaveChannels.A);
+						break;
+					}
+				case Keys.J:
+					{
+						mixer.RemoveInputStream(WaveChannels.B);
+						break;
+					}
+				case Keys.K:
+					{
+						mixer.RemoveInputStream(WaveChannels.C1);
+						break;
+					}
+				default:
+					{
+						mixer.RemoveInputStream(WaveChannels.A);
+						break;
+					}
+				
+			}
+			//output.Stop();
+		}
+
+		private void CnthesizerForm_Load(object sender, EventArgs e)
+		{
+			mixer = new WaveMixerStream32();
+			mixer.AutoStop = false;
+			output = new DirectSoundOut();
+			output.Init(mixer);
 			output.Play();
-
-			//wave = new NAudio.Wave.WaveFileReader("output.wav");
-			//output = new NAudio.Wave.DirectSoundOut();
-			
-			
-
-
-			//byte[] wave = Wave.A;
-			//switch (e.KeyCode)
-			//{
-			//	case Keys.A: { wave = Wave.Waves[0]; break; }
-			//}
-
-			//short[] wave = new short[SAMPLE_RATE];
-			//byte[] binaryWave = new byte[SAMPLE_RATE * sizeof(short)];
-			//float frequency = 440f;
-
-			//for (int i = 0; i<SAMPLE_RATE; ++i)
-			//{
-			//	wave[i] = Convert.ToInt16(short.MaxValue * Math.Sin(((Math.PI * 2 * frequency) / SAMPLE_RATE) * i));
-			//}
-			//Buffer.BlockCopy(wave, 0, binaryWave, 0, wave.Length * sizeof(short));
-
-			//using (MemoryStream memoryStream = new MemoryStream())
-			//using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
-			//{
-			//	short blockAlign = BITS_PER_SAMPLE / 8;
-			//	int subchunkTwoSize = SAMPLE_RATE * blockAlign;
-			//	binaryWriter.Write(new[] { 'R', 'I', 'F', 'F' });
-			//	binaryWriter.Write(36 + subchunkTwoSize);
-			//	binaryWriter.Write(new[] { 'W', 'A', 'V', 'E', 'f', 'm', 't', ' ' });
-			//	binaryWriter.Write(16);
-			//	binaryWriter.Write((short)1);
-			//	binaryWriter.Write((short)1);
-			//	binaryWriter.Write(SAMPLE_RATE);
-			//	binaryWriter.Write(SAMPLE_RATE * blockAlign);
-			//	binaryWriter.Write(blockAlign);
-			//	binaryWriter.Write(BITS_PER_SAMPLE);
-			//	binaryWriter.Write(new[] { 'd', 'a', 't', 'a' });
-			//	binaryWriter.Write(subchunkTwoSize);
-			//	binaryWriter.Write(wave);
-			//	memoryStream.Position = 0;
-			//	//soundPlayer.Stream = memoryStream;
-			//	//soundPlayer.Load();
-			//	//soundPlayer.Play();
-			//	memoryStream.Seek(0, SeekOrigin.Begin);
-			//	FileStream fs = File.Create("c1.wav");
-			//	byte[] buf = new byte[65536];
-			//	int len = 0;
-			//	while ((len = memoryStream.Read(buf, 0, 65536)) > 0)
-			//	{
-			//		fs.Write(buf, 0, len);
-			//	}
-			//	fs.Close();
-			//}
-
-			//soundPlayer.SoundLocation = "output.wav";
-			//soundPlayer.Play();
 		}
 	}
 }
