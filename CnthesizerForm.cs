@@ -17,15 +17,6 @@ namespace Cnthesizer
 		private const int SAMPLE_RATE = 44100;
 		private const short BITS_PER_SAMPLE = 16;
 
-		private NAudio.Wave.WaveFileReader c0 = new NAudio.Wave.WaveFileReader("c0.wav");
-		private NAudio.Wave.WaveFileReader d = new NAudio.Wave.WaveFileReader("d.wav");
-		private NAudio.Wave.WaveFileReader ewave = new NAudio.Wave.WaveFileReader("e.wav");	// weird name so that it doesn't collide with KeyEventArgs e; will change
-		private NAudio.Wave.WaveFileReader f = new NAudio.Wave.WaveFileReader("f.wav");
-		private NAudio.Wave.WaveFileReader g = new NAudio.Wave.WaveFileReader("g.wav");
-		private NAudio.Wave.WaveFileReader a = new NAudio.Wave.WaveFileReader("a.wav");
-		private NAudio.Wave.WaveFileReader b = new NAudio.Wave.WaveFileReader("b.wav");
-		private NAudio.Wave.WaveFileReader c1 = new NAudio.Wave.WaveFileReader("c1.wav");
-
 		private NAudio.Wave.DirectSoundOut output = new NAudio.Wave.DirectSoundOut();
 
 		public CnthesizerForm()
@@ -39,56 +30,56 @@ namespace Cnthesizer
 			{
 				case Keys.A:
 					{
-						c0.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(c0));
+						WaveFileReaders.C0.Position = 0;
+						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.C0));
 						break;
 					}
 				case Keys.S:
 					{
-						d.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(d));
+						WaveFileReaders.D.Position = 0;
+						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.D));
 						break;
 					}
 				case Keys.D:
 					{
-						ewave.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(ewave));
+						WaveFileReaders.E.Position = 0;
+						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.E));
 						break;
 					}
 				case Keys.F:
 					{
-						f.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(f));
+						WaveFileReaders.F.Position = 0;
+						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.F));
 						break;
 					}
 				case Keys.G:
 					{
-						g.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(g));
+						WaveFileReaders.G.Position = 0;
+						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.G));
 						break;
 					}
 				case Keys.H:
 					{
-						a.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(a));
+						WaveFileReaders.A.Position = 0;
+						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.A));
 						break;
 					}
 				case Keys.J:
 					{
-						b.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(b));
+						WaveFileReaders.B.Position = 0;
+						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.B));
 						break;
 					}
 				case Keys.K:
 					{
-						c1.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(c1));
+						WaveFileReaders.C1.Position = 0;
+						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.C1));
 						break;
 					}
 				default:
 					{
-						a.Position = 0;
-						output.Init(new NAudio.Wave.WaveChannel32(a));
+						WaveFileReaders.A.Position = 0;
+						output.Init(new NAudio.Wave.WaveChannel32(WaveFileReaders.A));
 						break;
 					}
 			}
