@@ -16,14 +16,10 @@ namespace Cnthesizer
 {
 	public partial class CnthesizerForm : Form
 	{
-		//private WaveMixerStream32 mixer;
 		private MixingWaveProvider32 mixer;
 		private DirectSoundOut output;
 
 		private bool[] currentlyPlayed;
-
-		private WavePlayer A = new WavePlayer("a.wav");
-		private WavePlayer C = new WavePlayer("c0.wav");
 
 		public CnthesizerForm()
 		{
@@ -36,89 +32,86 @@ namespace Cnthesizer
 			{
 				case Keys.A:
 					{
-						//WaveFileReaders.A.Position = 0;
-						//WaveChannels.A.Position = 0;
-						//if (!currentlyPlayed[(int)Frequency.C0])
-						//{
-						//	mixer.AddInputStream(WaveChannels.C0);
-						//	currentlyPlayed[(int)Frequency.C0] = true;
-						//}
-						//mixer.AddInputStream(A.Channel);
-						if (!currentlyPlayed[0])
+						if (!currentlyPlayed[(int)Frequency.C0])
 						{
-							mixer.AddInputStream(A.Channel);
-							currentlyPlayed[0] = true;
+							mixer.AddInputStream(WavePlayers.C0.Channel);
+							currentlyPlayed[(int)Frequency.C0] = true;
 						}
 						break;
 					}
 				case Keys.S:
 					{
-						//if (!currentlyPlayed[(int)Frequency.D])
-						//{
-						//	mixer.AddInputStream(WaveChannels.D);
-						//	currentlyPlayed[(int)Frequency.D] = true;
-						//}
-						//mixer.AddInputStream(C.Channel);
-						if (!currentlyPlayed[1])
+						if (!currentlyPlayed[(int)Frequency.D])
 						{
-							mixer.AddInputStream(C.Channel);
-							currentlyPlayed[1] = true;
+							mixer.AddInputStream(WavePlayers.D.Channel);
+							currentlyPlayed[(int)Frequency.D] = true;
 						}
 						break;
 					}
 				case Keys.D:
 					{
-						WaveFileReaders.E.Position = 0;
-						WaveChannels.E.Position = 0;
-						mixer.AddInputStream(WaveChannels.E);
+						if (!currentlyPlayed[(int)Frequency.E])
+						{
+							mixer.AddInputStream(WavePlayers.E.Channel);
+							currentlyPlayed[(int)Frequency.E] = true;
+						}
 						break;
 					}
 				case Keys.F:
 					{
-						WaveFileReaders.F.Position = 0;
-						WaveChannels.F.Position = 0;
-						mixer.AddInputStream(WaveChannels.F);
+						if (!currentlyPlayed[(int)Frequency.F])
+						{
+							mixer.AddInputStream(WavePlayers.F.Channel);
+							currentlyPlayed[(int)Frequency.F] = true;
+						}
 						break;
 					}
 				case Keys.G:
 					{
-						WaveFileReaders.G.Position = 0;
-						WaveChannels.G.Position = 0;
-						mixer.AddInputStream(WaveChannels.G);
+						if (!currentlyPlayed[(int)Frequency.G])
+						{
+							mixer.AddInputStream(WavePlayers.G.Channel);
+							currentlyPlayed[(int)Frequency.G] = true;
+						}
 						break;
 					}
 				case Keys.H:
 					{
-						WaveFileReaders.A.Position = 0;
-						WaveChannels.A.Position = 0;
-						mixer.AddInputStream(WaveChannels.A);
+						if (!currentlyPlayed[(int)Frequency.A])
+						{
+							mixer.AddInputStream(WavePlayers.A.Channel);
+							currentlyPlayed[(int)Frequency.A] = true;
+						}
 						break;
 					}
 				case Keys.J:
 					{
-						WaveFileReaders.B.Position = 0;
-						WaveChannels.B.Position = 0;
-						mixer.AddInputStream(WaveChannels.B);
+						if (!currentlyPlayed[(int)Frequency.B])
+						{
+							mixer.AddInputStream(WavePlayers.B.Channel);
+							currentlyPlayed[(int)Frequency.B] = true;
+						}
 						break;
 					}
 				case Keys.K:
 					{
-						WaveFileReaders.C1.Position = 0;
-						WaveChannels.C1.Position = 0;
-						mixer.AddInputStream(WaveChannels.C1);
+						if (!currentlyPlayed[(int)Frequency.C1])
+						{
+							mixer.AddInputStream(WavePlayers.C1.Channel);
+							currentlyPlayed[(int)Frequency.C1] = true;
+						}
 						break;
 					}
 				default:
 					{
-						WaveFileReaders.A.Position = 0;
-						WaveChannels.A.Position = 0;
-						mixer.AddInputStream(WaveChannels.A);
+						if (!currentlyPlayed[(int)Frequency.A])
+						{
+							mixer.AddInputStream(WavePlayers.A.Channel);
+							currentlyPlayed[(int)Frequency.A] = true;
+						}
 						break;
 					}
 			}
-			//if (mixer.Position >= mixer.Length - 1)
-			//	mixer.Position = 0;
-			//output.Play();
 
 		}
 
@@ -128,74 +121,70 @@ namespace Cnthesizer
 			{
 				case Keys.A:
 					{
-						mixer.RemoveInputStream(A.Channel);
-						currentlyPlayed[0] = false;
-						//currentlyPlayed[(int)Frequency.C0] = false;
-						//mixer.RemoveInputStream(WaveChannels.C0);
+						mixer.RemoveInputStream(WavePlayers.C0.Channel);
+						currentlyPlayed[(int)Frequency.C0] = false;
 						break;
 					}
 				case Keys.S:
 					{
-						mixer.RemoveInputStream(C.Channel);
-						currentlyPlayed[1] = false;
-						//currentlyPlayed[(int)Frequency.D] = false;
-						//mixer.RemoveInputStream(WaveChannels.D);
+						mixer.RemoveInputStream(WavePlayers.D.Channel);
+						currentlyPlayed[(int)Frequency.D] = false;
 						break;
 					}
 				case Keys.D:
 					{
-						mixer.RemoveInputStream(WaveChannels.E);
+						mixer.RemoveInputStream(WavePlayers.E.Channel);
+						currentlyPlayed[(int)Frequency.E] = false;
 						break;
 					}
 				case Keys.F:
 					{
-						mixer.RemoveInputStream(WaveChannels.F);
+						mixer.RemoveInputStream(WavePlayers.F.Channel);
+						currentlyPlayed[(int)Frequency.F] = false;
 						break;
 					}
 				case Keys.G:
 					{
-						mixer.RemoveInputStream(WaveChannels.G);
+						mixer.RemoveInputStream(WavePlayers.G.Channel);
+						currentlyPlayed[(int)Frequency.G] = false;
 						break;
 					}
 				case Keys.H:
 					{
-						mixer.RemoveInputStream(WaveChannels.A);
+						mixer.RemoveInputStream(WavePlayers.A.Channel);
+						currentlyPlayed[(int)Frequency.A] = false;
 						break;
 					}
 				case Keys.J:
 					{
-						mixer.RemoveInputStream(WaveChannels.B);
+						mixer.RemoveInputStream(WavePlayers.B.Channel);
+						currentlyPlayed[(int)Frequency.B] = false;
 						break;
 					}
 				case Keys.K:
 					{
-						mixer.RemoveInputStream(WaveChannels.C1);
+						mixer.RemoveInputStream(WavePlayers.C1.Channel);
+						currentlyPlayed[(int)Frequency.C1] = false;
 						break;
 					}
 				default:
 					{
-						mixer.RemoveInputStream(WaveChannels.A);
+						mixer.RemoveInputStream(WavePlayers.A.Channel);
+						currentlyPlayed[(int)Frequency.A] = false;
 						break;
 					}
-				
 			}
-			//output.Stop();
 		}
 
 		private void CnthesizerForm_Load(object sender, EventArgs e)
 		{
-			//currentlyPlayed = new bool[Enum.GetNames(typeof(Frequency)).Length];
-			//foreach (Frequency frequency in Enum.GetValues(typeof(Frequency)))
-			//{
-			//	currentlyPlayed[(int)frequency] = false;
-			//}
-
-			currentlyPlayed = new bool[] { false, false };
+			currentlyPlayed = new bool[Enum.GetNames(typeof(Frequency)).Length];
+			foreach (Frequency frequency in Enum.GetValues(typeof(Frequency)))
+			{
+				currentlyPlayed[(int)frequency] = false;
+			}
 
 			mixer = new MixingWaveProvider32();
-
-			//mixer = new WaveMixerStream32();
-			//mixer.AutoStop = false;
 			output = new DirectSoundOut();
 			output.Init(mixer);
 			output.Play();
