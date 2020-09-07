@@ -54,7 +54,7 @@ namespace Cnthesizer
 			return binaryWave;
 		}
 
-		public static void SaveToFile(string path, byte[] wave, int length, int sampleRate, short bitsPerSample, short channels)
+		public static void WriteToStream(Stream stream, byte[] wave, int length, int sampleRate, short bitsPerSample, short channels)
 		{
 			using (MemoryStream memoryStream = new MemoryStream())
 			using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
@@ -75,14 +75,12 @@ namespace Cnthesizer
 				binaryWriter.Write(subchunkTwoSize);
 				binaryWriter.Write(wave);
 				memoryStream.Seek(0, SeekOrigin.Begin);
-				FileStream fs = File.Create(path);
 				byte[] buf = new byte[65536];
 				int len = 0;
 				while ((len = memoryStream.Read(buf, 0, 65536)) > 0)
 				{
-					fs.Write(buf, 0, len);
+					stream.Write(buf, 0, len);
 				}
-				fs.Close();
 			}
 		}
 	}
