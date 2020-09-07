@@ -16,5 +16,8 @@ namespace Cnthesizer
 		public static readonly WavePlayer A = new WavePlayer("a.wav");
 		public static readonly WavePlayer B = new WavePlayer("b.wav");
 		public static readonly WavePlayer C1 = new WavePlayer("c1.wav");
+
+		public static readonly WavePlayer[] WavePlayerList =
+			new WavePlayer[] { C0, D, E, F, G, A, B, C1 };
 	}
 }
