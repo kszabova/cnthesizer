@@ -17,7 +17,7 @@ namespace Cnthesizer
 
 		public Wave()
 		{
-			foreach (Frequency frequency in Enum.GetValues(typeof(Frequency)))
+			foreach (FrequenciesAvailable frequency in Enum.GetValues(typeof(FrequenciesAvailable)))
 			{
 				byte[] wave = CreateWave(frequency, SAMPLE_RATE);
 				Waves.Add(wave);
@@ -25,9 +25,9 @@ namespace Cnthesizer
 		}
 
 
-		public static byte[] A = CreateWave(Frequency.C1, SAMPLE_RATE);
+		public static byte[] A = CreateWave(FrequenciesAvailable.C1, SAMPLE_RATE);
 
-		private static byte[] CreateWave(Frequency frequencyCode, int length)
+		private static byte[] CreateWave(FrequenciesAvailable frequencyCode, int length)
 		{
 			short[] wave = new short[length];
 			byte[] binaryWave = new byte[length * sizeof(short)];
@@ -36,6 +36,19 @@ namespace Cnthesizer
 			for (int i = 0; i < length; ++i)
 			{
 				wave[i] = Convert.ToInt16(short.MaxValue * Math.Sin(((Math.PI * 2 * frequency) / SAMPLE_RATE) * i));
+			}
+			Buffer.BlockCopy(wave, 0, binaryWave, 0, wave.Length * sizeof(short));
+			return binaryWave;
+		}
+
+		public static byte[] CreateEmptyWave(int length = 44100)
+		{
+			short[] wave = new short[length];
+			byte[] binaryWave = new byte[length * sizeof(short)];
+
+			for (int i = 0; i < length; ++i)
+			{
+				wave[i] = 0;
 			}
 			Buffer.BlockCopy(wave, 0, binaryWave, 0, wave.Length * sizeof(short));
 			return binaryWave;

@@ -10,6 +10,7 @@ namespace Cnthesizer
 {
 	static class WaveChannels
 	{
+		public static readonly WaveChannel32 Empty = new WaveChannel32(WaveFileReaders.Empty);
 		public static readonly WaveChannel32 C0 = new WaveChannel32(WaveFileReaders.C0);
 		public static readonly WaveChannel32 D = new WaveChannel32(WaveFileReaders.D);
 		public static readonly WaveChannel32 E = new WaveChannel32(WaveFileReaders.E);
@@ -20,6 +21,6 @@ namespace Cnthesizer
 		public static readonly WaveChannel32 C1 = new WaveChannel32(WaveFileReaders.C1);
 
 		public static readonly WaveChannel32[] WaveChannelList =
-			new WaveChannel32[] { C0, D, E, F, G, A, B, C1 };
+			new WaveChannel32[] { Empty, C0, D, E, F, G, A, B, C1 };
 	}
 }

@@ -10,6 +10,7 @@ namespace Cnthesizer
 {
 	static class WaveFileReaders
 	{
+		public static readonly WaveFileReader Empty = new WaveFileReader("empty.wav");
 		public static readonly WaveFileReader C0 = new WaveFileReader("c0.wav");
 		public static readonly WaveFileReader D = new WaveFileReader("d.wav");
 		public static readonly WaveFileReader E = new WaveFileReader("e.wav");
@@ -20,6 +21,6 @@ namespace Cnthesizer
 		public static readonly WaveFileReader C1 = new WaveFileReader("c1.wav");
 
 		public static readonly WaveFileReader[] WaveFileReaderList =
-			new WaveFileReader[] { C0, D, E, F, G, A, B, C1 };
+			new WaveFileReader[] { Empty, C0, D, E, F, G, A, B, C1 };
 	}
 }

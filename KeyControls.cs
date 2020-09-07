@@ -10,28 +10,28 @@ namespace Cnthesizer
 {
 	static class KeyControls
 	{
-		public static Frequency GetFrequencyFromKey(Keys key)
+		public static FrequenciesAvailable GetFrequencyFromKey(Keys key)
 		{
 			switch (key)
 			{
 				case Keys.A:
-					return Frequency.C0;
+					return FrequenciesAvailable.C0;
 				case Keys.S:
-					return Frequency.D;
+					return FrequenciesAvailable.D;
 				case Keys.D:
-					return Frequency.E;
+					return FrequenciesAvailable.E;
 				case Keys.F:
-					return Frequency.F;
+					return FrequenciesAvailable.F;
 				case Keys.G:
-					return Frequency.G;
+					return FrequenciesAvailable.G;
 				case Keys.H:
-					return Frequency.A;
+					return FrequenciesAvailable.A;
 				case Keys.J:
-					return Frequency.B;
+					return FrequenciesAvailable.B;
 				case Keys.K:
-					return Frequency.C1;
+					return FrequenciesAvailable.C1;
 				default:
-					return Frequency.A;
+					return FrequenciesAvailable.Empty;
 			}
 		}
 
