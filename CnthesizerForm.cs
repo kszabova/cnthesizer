@@ -25,28 +25,14 @@ namespace Cnthesizer
 
 		private void CnthesizerForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			int snippetIndex = (int)KeyControls.GetFrequencyFromKey(e.KeyCode);
-			// we don't want to do anything if a default was returned
-			if (snippetIndex == (int)FrequenciesAvailable.Empty) return;
-
-			if (!session.CurrentlyPlaying[snippetIndex])
-			{
-				WavePlayer inputStream = KeyControls.GetWavePlayerFromKey(e.KeyCode);
-				session.Mixer.AddInputStream(inputStream.Channel);
-				session.CurrentlyPlaying[snippetIndex] = true;
-			}
+			int frequencyIndex = (int)KeyControls.GetFrequencyFromKey(e.KeyCode);
+			session.StartPlayingFrequency(frequencyIndex);
 		}
 
 		private void CnthesizerForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			int snippetIndex = (int)KeyControls.GetFrequencyFromKey(e.KeyCode);
-			if (snippetIndex == (int)FrequenciesAvailable.Empty) return;
-
-			WavePlayer inputStream = KeyControls.GetWavePlayerFromKey(e.KeyCode);
-			session.Mixer.RemoveInputStream(inputStream.Channel);
-			session.CurrentlyPlaying[snippetIndex] = false;
-
-
+			int frequencyIndex = (int)KeyControls.GetFrequencyFromKey(e.KeyCode);
+			session.StopPlayingFrequency(frequencyIndex);
 		}
 
 		private void CnthesizerForm_Load(object sender, EventArgs e)
@@ -56,22 +42,16 @@ namespace Cnthesizer
 
 		private void beatButton_Click(object sender, EventArgs e)
 		{
-			if (beatButton.Text == "Play beat")
+			if (!session.BeatPlaying)
 			{
 				beatButton.Text = "Generating...";
 				int bpm = bpmSlider.Value;
-				byte[] beatWave = Wave.GenerateBeatWave(bpm);
-				using (FileStream fs = File.Create("beat.wav"))
-					Wave.WriteToStream(fs, beatWave, beatWave.Length / sizeof(short), 44100, 16, 1);
-				session.Beat = new WavePlayer("beat.wav");
-				session.Mixer.AddInputStream(session.Beat.Channel);
+				session.StartPlayingBeat(bpm);
 				beatButton.Text = "Stop beat";
 			}
-			else if (beatButton.Text == "Stop beat")
+			else
 			{
-				session.Mixer.RemoveInputStream(session.Beat.Channel);
-				session.Beat.Dispose();
-				session.Beat = null;
+				session.StopPlayingBeat();
 				beatButton.Text = "Play beat";
 			}
 		}
