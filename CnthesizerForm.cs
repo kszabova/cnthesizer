@@ -89,5 +89,10 @@ namespace Cnthesizer
 				beatButton.Text = "Play beat";
 			}
 		}
+
+		private void bpmSlider_ValueChanged(object sender, EventArgs e)
+		{
+			bpmValueTextBox.Text = bpmSlider.Value.ToString();
+		}
 	}
 }
