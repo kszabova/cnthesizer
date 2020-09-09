@@ -16,11 +16,7 @@ namespace Cnthesizer
 {
 	public partial class CnthesizerForm : Form
 	{
-		private MixingWaveProvider32 mixer;
-		private DirectSoundOut output;
-
-		private bool[] currentlyPlayed;
-		private WavePlayer beat = null;
+		private Session session;
 
 		public CnthesizerForm()
 		{
@@ -33,11 +29,11 @@ namespace Cnthesizer
 			// we don't want to do anything if a default was returned
 			if (snippetIndex == (int)FrequenciesAvailable.Empty) return;
 
-			if (!currentlyPlayed[snippetIndex])
+			if (!session.CurrentlyPlaying[snippetIndex])
 			{
 				WavePlayer inputStream = KeyControls.GetWavePlayerFromKey(e.KeyCode);
-				mixer.AddInputStream(inputStream.Channel);
-				currentlyPlayed[snippetIndex] = true;
+				session.Mixer.AddInputStream(inputStream.Channel);
+				session.CurrentlyPlaying[snippetIndex] = true;
 			}
 		}
 
@@ -47,25 +43,15 @@ namespace Cnthesizer
 			if (snippetIndex == (int)FrequenciesAvailable.Empty) return;
 
 			WavePlayer inputStream = KeyControls.GetWavePlayerFromKey(e.KeyCode);
-			mixer.RemoveInputStream(inputStream.Channel);
-			currentlyPlayed[snippetIndex] = false;
+			session.Mixer.RemoveInputStream(inputStream.Channel);
+			session.CurrentlyPlaying[snippetIndex] = false;
 
 
 		}
 
 		private void CnthesizerForm_Load(object sender, EventArgs e)
 		{
-			currentlyPlayed = new bool[Enum.GetNames(typeof(FrequenciesAvailable)).Length];
-			foreach (FrequenciesAvailable frequency in Enum.GetValues(typeof(FrequenciesAvailable)))
-			{
-				currentlyPlayed[(int)frequency] = false;
-			}
-
-			mixer = new MixingWaveProvider32(new List<WaveChannel32> { WavePlayers.Empty.Channel });
-			currentlyPlayed[(int)FrequenciesAvailable.Empty] = true;
-			output = new DirectSoundOut();
-			output.Init(mixer);
-			output.Play();
+			session = Session.CreateSession();
 		}
 
 		private void beatButton_Click(object sender, EventArgs e)
@@ -77,15 +63,15 @@ namespace Cnthesizer
 				byte[] beatWave = Wave.GenerateBeatWave(bpm);
 				using (FileStream fs = File.Create("beat.wav"))
 					Wave.WriteToStream(fs, beatWave, beatWave.Length / sizeof(short), 44100, 16, 1);
-				beat = new WavePlayer("beat.wav");
-				mixer.AddInputStream(beat.Channel);
+				session.Beat = new WavePlayer("beat.wav");
+				session.Mixer.AddInputStream(session.Beat.Channel);
 				beatButton.Text = "Stop beat";
 			}
 			else if (beatButton.Text == "Stop beat")
 			{
-				mixer.RemoveInputStream(beat.Channel);
-				beat.Dispose();
-				beat = null;
+				session.Mixer.RemoveInputStream(session.Beat.Channel);
+				session.Beat.Dispose();
+				session.Beat = null;
 				beatButton.Text = "Play beat";
 			}
 		}
