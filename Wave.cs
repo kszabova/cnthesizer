@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Media;
 using System.IO;
+using NAudio.Wave;
 
 namespace Cnthesizer
 {
@@ -52,7 +53,7 @@ namespace Cnthesizer
 			for (int i = 0; i < length; ++i)
 			{
 				double sineValue = Math.Sin(i * Math.PI / length);
-				double toneWave = short.MaxValue * Math.Sign(Math.Sin(Math.PI * 2 * frequency / SAMPLE_RATE * i));
+				double toneWave = (short.MaxValue / 8) * Math.Sign(Math.Sin(Math.PI * 2 * frequency / SAMPLE_RATE * i));
 				wave[i] = Convert.ToInt16(sineValue * toneWave);
 			}
 			Buffer.BlockCopy(wave, 0, binaryWave, 0, wave.Length * sizeof(short));
