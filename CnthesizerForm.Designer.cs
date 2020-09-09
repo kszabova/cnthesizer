@@ -28,24 +28,55 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.bpmSlider = new System.Windows.Forms.TrackBar();
+			this.beatButton = new System.Windows.Forms.Button();
+			((System.ComponentModel.ISupportInitialize)(this.bpmSlider)).BeginInit();
 			this.SuspendLayout();
+			// 
+			// bpmSlider
+			// 
+			this.bpmSlider.Location = new System.Drawing.Point(29, 39);
+			this.bpmSlider.Maximum = 360;
+			this.bpmSlider.Minimum = 60;
+			this.bpmSlider.Name = "bpmSlider";
+			this.bpmSlider.Size = new System.Drawing.Size(353, 56);
+			this.bpmSlider.SmallChange = 10;
+			this.bpmSlider.TabIndex = 0;
+			this.bpmSlider.Value = 60;
+			// 
+			// beatButton
+			// 
+			this.beatButton.Location = new System.Drawing.Point(439, 24);
+			this.beatButton.Name = "beatButton";
+			this.beatButton.Size = new System.Drawing.Size(322, 70);
+			this.beatButton.TabIndex = 1;
+			this.beatButton.Text = "Play beat";
+			this.beatButton.UseVisualStyleBackColor = true;
+			this.beatButton.Click += new System.EventHandler(this.beatButton_Click);
 			// 
 			// CnthesizerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.beatButton);
+			this.Controls.Add(this.bpmSlider);
 			this.KeyPreview = true;
 			this.Name = "CnthesizerForm";
 			this.Text = "#Cnthesizer";
 			this.Load += new System.EventHandler(this.CnthesizerForm_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CnthesizerForm_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CnthesizerForm_KeyUp);
+			((System.ComponentModel.ISupportInitialize)(this.bpmSlider)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
 		#endregion
+
+		private System.Windows.Forms.TrackBar bpmSlider;
+		private System.Windows.Forms.Button beatButton;
 	}
 }
 
