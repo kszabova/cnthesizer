@@ -87,5 +87,11 @@ namespace Cnthesizer
 			Beat = null;
 			BeatPlaying = false;
 		}
+
+		public void ChangeBeatFrequency(int bpm)
+		{
+			StopPlayingBeat();
+			StartPlayingBeat(bpm);
+		}
 	}
 }

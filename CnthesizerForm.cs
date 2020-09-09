@@ -59,6 +59,10 @@ namespace Cnthesizer
 		private void bpmSlider_ValueChanged(object sender, EventArgs e)
 		{
 			bpmValueTextBox.Text = bpmSlider.Value.ToString();
+
+			// re-generate beat if it is playing
+			if (session.BeatPlaying)
+				session.ChangeBeatFrequency(bpmSlider.Value);
 		}
 	}
 }
