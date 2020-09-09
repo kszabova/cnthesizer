@@ -20,6 +20,7 @@ namespace Cnthesizer
 		private DirectSoundOut output;
 
 		private bool[] currentlyPlayed;
+		private WavePlayer beat = null;
 
 		public CnthesizerForm()
 		{
@@ -65,51 +66,28 @@ namespace Cnthesizer
 			output = new DirectSoundOut();
 			output.Init(mixer);
 			output.Play();
-
-			byte[] wave = Wave.GenerateBeatWave(180);
-			using (FileStream fs = File.Create("beat.wav"))
-				Wave.WriteToStream(fs, wave, wave.Length / 2, 44100, 16, 1);
-
-			//int SAMPLE_RATE = 44100;
-			//short BITS_PER_SAMPLE = 16;
-			//byte[] wave = Wave.GenerateBeatWave(120);
-			//using (MemoryStream memoryStream = new MemoryStream())
-			//using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
-			//{
-			//	short blockAlign = (short) (BITS_PER_SAMPLE / 8);
-			//	int subchunkTwoSize = SAMPLE_RATE;
-			//	binaryWriter.Write(new[] { 'R', 'I', 'F', 'F' });
-			//	binaryWriter.Write(36 + subchunkTwoSize);
-			//	binaryWriter.Write(new[] { 'W', 'A', 'V', 'E', 'f', 'm', 't', ' ' });
-			//	binaryWriter.Write(16);
-			//	binaryWriter.Write((short)1);
-			//	binaryWriter.Write((short)1);
-			//	binaryWriter.Write(SAMPLE_RATE);
-			//	binaryWriter.Write(SAMPLE_RATE * blockAlign);
-			//	binaryWriter.Write(blockAlign);
-			//	binaryWriter.Write(BITS_PER_SAMPLE);
-			//	binaryWriter.Write(new[] { 'd', 'a', 't', 'a' });
-			//	binaryWriter.Write(subchunkTwoSize);
-			//	binaryWriter.Write(wave);
-			//	memoryStream.Seek(0, SeekOrigin.Begin);
-			//	FileStream fs = File.Create("beat.wav");
-			//	byte[] buf = new byte[65536];
-			//	int len = 0;
-			//	while ((len = memoryStream.Read(buf, 0, 65536)) > 0)
-			//	{
-			//		fs.Write(buf, 0, len);
-			//	}
-			//	fs.Close();
-			//}
 		}
 
 		private void beatButton_Click(object sender, EventArgs e)
 		{
-			int bpm = bpmSlider.Value;
-			byte[] beatWave = Wave.GenerateBeatWave(bpm);
-			using (FileStream fs = File.Create("beat.wav"))
-				Wave.WriteToStream(fs, beatWave, beatWave.Length / sizeof(short), 44100, 16, 1);
-			mixer.AddInputStream(new WaveChannel32(new LoopStream(new WaveFileReader("beat.wav"))) { PadWithZeroes = false });
+			if (beatButton.Text == "Play beat")
+			{
+				beatButton.Text = "Generating...";
+				int bpm = bpmSlider.Value;
+				byte[] beatWave = Wave.GenerateBeatWave(bpm);
+				using (FileStream fs = File.Create("beat.wav"))
+					Wave.WriteToStream(fs, beatWave, beatWave.Length / sizeof(short), 44100, 16, 1);
+				beat = new WavePlayer("beat.wav");
+				mixer.AddInputStream(beat.Channel);
+				beatButton.Text = "Stop beat";
+			}
+			else if (beatButton.Text == "Stop beat")
+			{
+				mixer.RemoveInputStream(beat.Channel);
+				beat.Dispose();
+				beat = null;
+				beatButton.Text = "Play beat";
+			}
 		}
 	}	
 }
