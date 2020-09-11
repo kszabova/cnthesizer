@@ -13,14 +13,14 @@ namespace Cnthesizer
 		public int SAMPLE_RATE => 44100;
 		public short BITS_PER_SAMPLE => 16;
 		public short CHANNELS => 1;
-		public MixingWaveProvider32 Mixer => mixer;
-		public DirectSoundOut Output => output;
+		public MixingWaveProvider32 Mixer { get; }
+		public DirectSoundOut Output { get; }
+		public WaveRecorder Recorder { get; }
+		public IWavePlayer WaveOut { get; }
 		public bool[] CurrentlyPlaying { get; }
 		public WavePlayer Beat { get; private set; }
 		public bool BeatPlaying { get; private set; }
 
-		private readonly MixingWaveProvider32 mixer;
-		private readonly DirectSoundOut output;
 		private readonly string defaultBeatFilePath = "beat.wav";
 
 		private Session()
@@ -33,16 +33,22 @@ namespace Cnthesizer
 			}
 
 			// initialize mixer with "silence" playing
-			mixer = new MixingWaveProvider32(new List<WaveChannel32> { WavePlayers.Empty.Channel });
+			Mixer = new MixingWaveProvider32(new List<WaveChannel32> { WavePlayers.Empty.Channel });
 			CurrentlyPlaying[(int)FrequenciesAvailable.Empty] = true;
 
 			// initialize output
-			output = new DirectSoundOut();
-			output.Init(mixer);
-			output.Play();
+			Output = new DirectSoundOut();
+			Output.Init(Mixer);
+			Output.Play();
 
 			// set beat as not-playing
 			BeatPlaying = false;
+
+			// initialize recorder
+			Recorder = new WaveRecorder(Mixer, "recording.wav");
+			WaveOut = new WaveOut();
+			WaveOut.Init(Recorder);
+			WaveOut.Play();
 		}
 
 		public static Session CreateSession() => new Session();
@@ -55,7 +61,7 @@ namespace Cnthesizer
 			if (!CurrentlyPlaying[frequencyIndex])
 			{
 				WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
-				mixer.AddInputStream(inputStream.Channel);
+				Mixer.AddInputStream(inputStream.Channel);
 				CurrentlyPlaying[frequencyIndex] = true;
 			}
 		}
@@ -66,7 +72,7 @@ namespace Cnthesizer
 			if (frequencyIndex == (int)FrequenciesAvailable.Empty) return;
 
 			WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
-			mixer.RemoveInputStream(inputStream.Channel);
+			Mixer.RemoveInputStream(inputStream.Channel);
 			CurrentlyPlaying[frequencyIndex] = false;
 		}
 
@@ -76,13 +82,13 @@ namespace Cnthesizer
 			using (FileStream fs = File.Create(defaultBeatFilePath))
 				Wave.WriteToStream(fs, beatWave, beatWave.Length / sizeof(short), SAMPLE_RATE, BITS_PER_SAMPLE, CHANNELS);
 			Beat = new WavePlayer(defaultBeatFilePath);
-			mixer.AddInputStream(Beat.Channel);
+			Mixer.AddInputStream(Beat.Channel);
 			BeatPlaying = true;
 		}
 
 		public void StopPlayingBeat()
 		{
-			mixer.RemoveInputStream(Beat.Channel);
+			Mixer.RemoveInputStream(Beat.Channel);
 			Beat.Dispose();
 			Beat = null;
 			BeatPlaying = false;
@@ -92,6 +98,14 @@ namespace Cnthesizer
 		{
 			StopPlayingBeat();
 			StartPlayingBeat(bpm);
+		}
+
+		public void StopPlaying()
+		{
+			Output.Stop();
+			WaveOut.Stop();
+			WaveOut.Dispose();
+			Recorder.Dispose();
 		}
 	}
 }

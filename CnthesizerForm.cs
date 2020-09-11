@@ -64,5 +64,10 @@ namespace Cnthesizer
 			if (session.BeatPlaying)
 				session.ChangeBeatFrequency(bpmSlider.Value);
 		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			session.StopPlaying();
+		}
 	}
 }
