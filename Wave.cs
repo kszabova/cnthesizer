@@ -76,31 +76,31 @@ namespace Cnthesizer
 		public static void WriteToStream(Stream stream, byte[] wave, int samples, int sampleRate, short bitsPerSample, short channels)
 		{
 			using (MemoryStream memoryStream = new MemoryStream())
-			using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
-			{
-				short blockAlign = (short)(channels * bitsPerSample / 8);
-				int subchunkTwoSize = samples * blockAlign;
-				binaryWriter.Write(new[] { 'R', 'I', 'F', 'F' });							// 4B ChunkID
-				binaryWriter.Write(36 + subchunkTwoSize);									// 4B ChunkSize
-				binaryWriter.Write(new[] { 'W', 'A', 'V', 'E', 'f', 'm', 't', ' ' });		// 4B Format + 4B Subchunk1ID
-				binaryWriter.Write(16);														// 4B Subchunk1Size
-				binaryWriter.Write((short)1);												// 2B AudioFormat
-				binaryWriter.Write((short)channels);										// 2B NumChannels
-				binaryWriter.Write(SAMPLE_RATE);											// 4B SampleRate
-				binaryWriter.Write(SAMPLE_RATE * blockAlign);								// 4B ByteRate
-				binaryWriter.Write((short)(blockAlign));									// 2B BlockAlign
-				binaryWriter.Write(BITS_PER_SAMPLE);										// 2B BitsPerSample
-				binaryWriter.Write(new[] { 'd', 'a', 't', 'a' });							// 4B Subchunk2Id
-				binaryWriter.Write(subchunkTwoSize);										// 4B Subchunk2Size
-				binaryWriter.Write(wave);													// xB Data
-				memoryStream.Seek(0, SeekOrigin.Begin);
-				byte[] buf = new byte[65536];
-				int len = 0;
-				while ((len = memoryStream.Read(buf, 0, 65536)) > 0)
+				using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
 				{
-					stream.Write(buf, 0, len);
+					short blockAlign = (short)(channels * bitsPerSample / 8);
+					int subchunkTwoSize = samples * blockAlign;
+					binaryWriter.Write(new[] { 'R', 'I', 'F', 'F' });							// 4B ChunkID
+					binaryWriter.Write(36 + subchunkTwoSize);									// 4B ChunkSize
+					binaryWriter.Write(new[] { 'W', 'A', 'V', 'E', 'f', 'm', 't', ' ' });		// 4B Format + 4B Subchunk1ID
+					binaryWriter.Write(16);														// 4B Subchunk1Size
+					binaryWriter.Write((short)1);												// 2B AudioFormat
+					binaryWriter.Write((short)channels);										// 2B NumChannels
+					binaryWriter.Write(SAMPLE_RATE);											// 4B SampleRate
+					binaryWriter.Write(SAMPLE_RATE * blockAlign);								// 4B ByteRate
+					binaryWriter.Write((short)(blockAlign));									// 2B BlockAlign
+					binaryWriter.Write(BITS_PER_SAMPLE);										// 2B BitsPerSample
+					binaryWriter.Write(new[] { 'd', 'a', 't', 'a' });							// 4B Subchunk2Id
+					binaryWriter.Write(subchunkTwoSize);										// 4B Subchunk2Size
+					binaryWriter.Write(wave);													// xB Data
+					memoryStream.Seek(0, SeekOrigin.Begin);
+					byte[] buf = new byte[65536];
+					int len = 0;
+					while ((len = memoryStream.Read(buf, 0, 65536)) > 0)
+					{
+						stream.Write(buf, 0, len);
+					}
 				}
-			}
 		}
 	}
 }
