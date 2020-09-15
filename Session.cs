@@ -45,10 +45,22 @@ namespace Cnthesizer
 			BeatPlaying = false;
 
 			// initialize recorder
-			Recorder = new WaveRecorder(Mixer, "recording.wav");
-			WaveOut = new WaveOut();
-			WaveOut.Init(Recorder);
-			WaveOut.Play();
+			//Recorder = new WaveRecorder(Mixer, "recording.wav");
+			//WaveOut = new WaveOut();
+			//WaveOut.Init(Recorder);
+			//WaveOut.Play();
+
+			// play mixed wave
+			short[] c = Wave.CreateShortWave(FrequenciesAvailable.C0, 44100);
+			short[] f = Wave.CreateShortWave(FrequenciesAvailable.F, 44100);
+			short[] mixed = Mixing.MixTwoWaves(c, f);
+			byte[] mixedBytes = Wave.ConvertShortWaveToBytes(mixed);
+			using (FileStream fs = File.Create("mixed.wav"))
+			{
+				Wave.WriteToStream(fs, mixedBytes, 44100, 44100, 16, 1);
+			}
+			WavePlayer mixedPlayer = new WavePlayer("mixed.wav");
+			Mixer.AddInputStream(mixedPlayer.Channel);
 		}
 
 		public static Session CreateSession() => new Session();
