@@ -52,8 +52,9 @@ namespace Cnthesizer
 
 			// play mixed wave
 			short[] c = Wave.CreateShortWave(FrequenciesAvailable.C0, 44100);
-			short[] f = Wave.CreateShortWave(FrequenciesAvailable.F, 44100);
-			short[] mixed = Mixing.MixTwoWaves(c, f);
+			short[] f = Wave.CreateShortWave(FrequenciesAvailable.F, 11025);
+			short[] a = Wave.CreateShortWave(FrequenciesAvailable.A, 22050);
+			short[] mixed = Mixing.MixListOfWaves(new List<short[]> { c, f, a });
 			byte[] mixedBytes = Wave.ConvertShortWaveToBytes(mixed);
 			using (FileStream fs = File.Create("mixed.wav"))
 			{

@@ -26,5 +26,37 @@ namespace Cnthesizer
 
 			return mixed;
 		}
+
+		public static short[] MixListOfWaves(List<short[]> waves)
+		{
+			// sort waves by their length from shortest
+			waves.Sort((w1, w2) => w1.Length < w2.Length ? -1 : (w1.Length == w2.Length ? 0 : 1));
+
+			short[] mixedWave = new short[waves[waves.Count - 1].Length];
+
+			int n = waves.Count;
+			int index = 0;
+			// generate new wave as long as there are any waves left
+			int waveNumber = 0;
+			while (waveNumber < waves.Count)
+			{
+				// average samples from all waves
+				for (; index < waves[waveNumber].Length; index++)
+				{
+					int sum = 0;
+					for (int w = waveNumber; w < waves.Count; w++) sum += waves[w][index];
+					mixedWave[index] = (short)(sum / n);
+				}
+				// when we found the end of a wave, decrement n by the number of waves of equal length
+				int curLength = waves[waveNumber].Length;
+				while (waveNumber < waves.Count && waves[waveNumber].Length == curLength)
+				{
+					waveNumber++;
+					n--;
+				}
+			}
+
+			return mixedWave;
+		}
 	}
 }
