@@ -20,24 +20,29 @@ namespace Cnthesizer
 		{
 			foreach (FrequenciesAvailable frequency in Enum.GetValues(typeof(FrequenciesAvailable)))
 			{
-				byte[] wave = CreateWave(frequency, SAMPLE_RATE);
+				byte[] wave = ConvertShortWaveToBytes(CreateShortWave(frequency, SAMPLE_RATE));
 				Waves.Add(wave);
 			}
 		}
 
 
-		public static byte[] A = CreateWave(FrequenciesAvailable.C1, SAMPLE_RATE);
+		public static byte[] A = ConvertShortWaveToBytes(CreateShortWave(FrequenciesAvailable.C1, SAMPLE_RATE));
 
-		public static byte[] CreateWave(FrequenciesAvailable frequencyCode, int length)
+		internal static short[] CreateShortWave(FrequenciesAvailable frequencyCode, int length)
 		{
 			short[] wave = new short[length];
-			byte[] binaryWave = new byte[length * sizeof(short)];
 			float frequency = Frequencies.Freqs[(int)frequencyCode];
-
 			for (int i = 0; i < length; ++i)
 			{
 				wave[i] = Convert.ToInt16(short.MaxValue * Math.Sin(((Math.PI * 2 * frequency) / SAMPLE_RATE) * i));  // TODO: shouldn't we replace SAMPLE RATE with length?
 			}
+
+			return wave;
+		}
+
+		internal static byte[] ConvertShortWaveToBytes(short[] wave)
+		{
+			byte[] binaryWave = new byte[wave.Length * sizeof(short)];
 			Buffer.BlockCopy(wave, 0, binaryWave, 0, wave.Length * sizeof(short));
 			return binaryWave;
 		}
