@@ -56,34 +56,34 @@ namespace Cnthesizer
 
 			if (!CurrentlyPlaying[frequencyIndex])
 			{
-				WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
-				Mixer.AddInputStream(inputStream.Channel);
-				CurrentlyPlaying[frequencyIndex] = true;
-
 				//
 				if (recording != null)
 				{
 					List<FrequenciesAvailable> freqs = GetFrequenciesPlaying();
 					recording.AddNewEpoch(freqs);
 				}
+
+				WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
+				Mixer.AddInputStream(inputStream.Channel);
+				CurrentlyPlaying[frequencyIndex] = true;
 			}
 		}
 
 		public void StopPlayingFrequency(int frequencyIndex)
 		{
-			// do nothing if no tone was released
-			if (frequencyIndex == (int)FrequenciesAvailable.Empty) return;
-
-			WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
-			Mixer.RemoveInputStream(inputStream.Channel);
-			CurrentlyPlaying[frequencyIndex] = false;
-
 			// 
 			if (recording != null)
 			{
 				List<FrequenciesAvailable> freqs = GetFrequenciesPlaying();
 				recording.AddNewEpoch(freqs);
 			}
+
+			// do nothing if no tone was released
+			if (frequencyIndex == (int)FrequenciesAvailable.Empty) return;
+
+			WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
+			Mixer.RemoveInputStream(inputStream.Channel);
+			CurrentlyPlaying[frequencyIndex] = false;
 		}
 
 		public void StartPlayingBeat(int bpm)
