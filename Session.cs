@@ -16,14 +16,12 @@ namespace Cnthesizer
 		public short CHANNELS => 1;
 		public MixingWaveProvider32 Mixer { get; }
 		public DirectSoundOut Output { get; }
-		public WaveRecorder Recorder { get; }
-		public IWavePlayer WaveOut { get; }
 		public bool[] CurrentlyPlaying { get; }
 		public WavePlayer Beat { get; private set; }
 		public bool BeatPlaying { get; private set; }
 
 		private readonly string defaultBeatFilePath = "beat.wav";
-		private Recording recording;
+		private IRecorder recorder;
 
 		private Session()
 		{
@@ -45,6 +43,9 @@ namespace Cnthesizer
 
 			// set beat as not-playing
 			BeatPlaying = false;
+
+			// initialize recording to placeholder instance
+			recorder = RecorderPlaceholder.Instance;
 		}
 
 		public static Session CreateSession() => new Session();
@@ -56,12 +57,7 @@ namespace Cnthesizer
 
 			if (!CurrentlyPlaying[frequencyIndex])
 			{
-				//
-				if (recording != null)
-				{
-					List<FrequenciesAvailable> freqs = GetFrequenciesPlaying();
-					recording.AddNewEpoch(freqs);
-				}
+				UpdateRecorder();
 
 				WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
 				Mixer.AddInputStream(inputStream.Channel);
@@ -71,12 +67,7 @@ namespace Cnthesizer
 
 		public void StopPlayingFrequency(int frequencyIndex)
 		{
-			// 
-			if (recording != null)
-			{
-				List<FrequenciesAvailable> freqs = GetFrequenciesPlaying();
-				recording.AddNewEpoch(freqs);
-			}
+			UpdateRecorder();
 
 			// do nothing if no tone was released
 			if (frequencyIndex == (int)FrequenciesAvailable.Empty) return;
@@ -113,20 +104,24 @@ namespace Cnthesizer
 		public void StopPlaying()
 		{
 			Output.Stop();
-			WaveOut.Stop();
-			WaveOut.Dispose();
-			Recorder.Dispose();
 		}
 
 		public void StartRecording()
 		{
-			// check that we aren't already recording
+			if (recorder.IsActive) return;
 
-			recording = Recording.CreateRecording(this);
-			recording.StartRecording();
+			recorder = Cnthesizer.Recorder.CreateRecording(this);
+			recorder.StartRecording();
 		}
 
-		public void StopRecording() => recording.StopRecording();
+		public void StopRecording()
+		{
+			if (!recorder.IsActive) return;
+
+			UpdateRecorder();
+			recorder.StopRecording();
+			recorder = RecorderPlaceholder.Instance;
+		}
 
 		private List<FrequenciesAvailable> GetFrequenciesPlaying()
 		{
@@ -137,6 +132,12 @@ namespace Cnthesizer
 					frequenciesPlaying.Add(frequency);
 			}
 			return frequenciesPlaying;
+		}
+
+		private void UpdateRecorder()
+		{
+			List<FrequenciesAvailable> freqs = GetFrequenciesPlaying();
+			recorder.AddNewEpoch(freqs);
 		}
 	}
 }
