@@ -17,6 +17,9 @@ namespace Cnthesizer
 			Frequencies = frequencies;
 		}
 
+		public static Epoch CreateEpoch(long duration, List<FrequenciesAvailable> frequencies)
+			=> new Epoch(duration, frequencies);
+
 		internal short[] ConvertToWave(int sampleSize)
 		{
 			int length = ConvertDurationToLength(sampleSize);
