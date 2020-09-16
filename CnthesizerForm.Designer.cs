@@ -31,7 +31,8 @@
 			this.bpmSlider = new System.Windows.Forms.TrackBar();
 			this.beatButton = new System.Windows.Forms.Button();
 			this.bpmValueTextBox = new System.Windows.Forms.TextBox();
-			this.button1 = new System.Windows.Forms.Button();
+			this.startRecordingBtn = new System.Windows.Forms.Button();
+			this.stopRecordingBtn = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.bpmSlider)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -65,22 +66,33 @@
 			this.bpmValueTextBox.TabIndex = 2;
 			this.bpmValueTextBox.Text = "60";
 			// 
-			// button1
+			// startRecordingBtn
 			// 
-			this.button1.Location = new System.Drawing.Point(394, 175);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(144, 131);
-			this.button1.TabIndex = 3;
-			this.button1.Text = "button1";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.startRecordingBtn.Location = new System.Drawing.Point(40, 196);
+			this.startRecordingBtn.Name = "startRecordingBtn";
+			this.startRecordingBtn.Size = new System.Drawing.Size(196, 81);
+			this.startRecordingBtn.TabIndex = 3;
+			this.startRecordingBtn.Text = "Start recording";
+			this.startRecordingBtn.UseVisualStyleBackColor = true;
+			this.startRecordingBtn.Click += new System.EventHandler(this.startRecordingBtn_Click);
+			// 
+			// stopRecordingBtn
+			// 
+			this.stopRecordingBtn.Location = new System.Drawing.Point(296, 196);
+			this.stopRecordingBtn.Name = "stopRecordingBtn";
+			this.stopRecordingBtn.Size = new System.Drawing.Size(196, 81);
+			this.stopRecordingBtn.TabIndex = 4;
+			this.stopRecordingBtn.Text = "Stop recording";
+			this.stopRecordingBtn.UseVisualStyleBackColor = true;
+			this.stopRecordingBtn.Click += new System.EventHandler(this.stopRecordingBtn_Click);
 			// 
 			// CnthesizerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.stopRecordingBtn);
+			this.Controls.Add(this.startRecordingBtn);
 			this.Controls.Add(this.bpmValueTextBox);
 			this.Controls.Add(this.beatButton);
 			this.Controls.Add(this.bpmSlider);
@@ -101,6 +113,7 @@
 		private System.Windows.Forms.TrackBar bpmSlider;
 		private System.Windows.Forms.Button beatButton;
 		private System.Windows.Forms.TextBox bpmValueTextBox;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button startRecordingBtn;
+		private System.Windows.Forms.Button stopRecordingBtn;
 	}
 }

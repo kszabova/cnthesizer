@@ -65,9 +65,14 @@ namespace Cnthesizer
 				session.ChangeBeatFrequency(bpmSlider.Value);
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void startRecordingBtn_Click(object sender, EventArgs e)
 		{
-			session.StopPlaying();
+			session.StartRecording();
+		}
+
+		private void stopRecordingBtn_Click(object sender, EventArgs e)
+		{
+			session.StopRecording();
 		}
 	}
 }

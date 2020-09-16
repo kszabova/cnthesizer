@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Cnthesizer
 {
-	class Session
+	internal class Session
 	{
 		public int SAMPLE_RATE => 44100;
 		public short BITS_PER_SAMPLE => 16;
@@ -22,6 +22,7 @@ namespace Cnthesizer
 		public bool BeatPlaying { get; private set; }
 
 		private readonly string defaultBeatFilePath = "beat.wav";
+		private Recording recording;
 
 		private Session()
 		{
@@ -45,23 +46,7 @@ namespace Cnthesizer
 			BeatPlaying = false;
 
 			// initialize recorder
-			//Recorder = new WaveRecorder(Mixer, "recording.wav");
-			//WaveOut = new WaveOut();
-			//WaveOut.Init(Recorder);
-			//WaveOut.Play();
-
-			// play mixed wave
-			short[] c = Wave.CreateShortWave(FrequenciesAvailable.C0, 44100);
-			short[] f = Wave.CreateShortWave(FrequenciesAvailable.F, 11025);
-			short[] a = Wave.CreateShortWave(FrequenciesAvailable.A, 22050);
-			short[] mixed = Mixing.MixListOfWaves(new List<short[]> { c, f, a });
-			byte[] mixedBytes = Wave.ConvertShortWaveToBytes(mixed);
-			using (FileStream fs = File.Create("mixed.wav"))
-			{
-				Wave.WriteToStream(fs, mixedBytes, 44100, 44100, 16, 1);
-			}
-			WavePlayer mixedPlayer = new WavePlayer("mixed.wav");
-			Mixer.AddInputStream(mixedPlayer.Channel);
+			recording = Recording.CreateRecording(this);
 		}
 
 		public static Session CreateSession() => new Session();
@@ -119,6 +104,21 @@ namespace Cnthesizer
 			WaveOut.Stop();
 			WaveOut.Dispose();
 			Recorder.Dispose();
+		}
+
+		public void StartRecording() => recording.StartRecording();
+
+		public void StopRecording() => recording.StopRecording();
+
+		private List<FrequenciesAvailable> GetFrequenciesPlaying()
+		{
+			List<FrequenciesAvailable> frequenciesPlaying = new List<FrequenciesAvailable> { };
+			foreach (FrequenciesAvailable frequency in Enum.GetValues(typeof(FrequenciesAvailable)))
+			{
+				if (CurrentlyPlaying[(int)frequency])
+					frequenciesPlaying.Add(frequency);
+			}
+			return frequenciesPlaying;
 		}
 	}
 }
