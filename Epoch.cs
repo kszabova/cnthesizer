@@ -32,8 +32,8 @@ namespace Cnthesizer
 
 		private int ConvertDurationToLength(int sampleSize)
 		{
-			// number of samples per milisecond * number of miliseconds
-			return (int)(sampleSize / 1000 * Duration);
+			// number of milliseconds * number of samples per millisecond
+			return (int)(Duration * sampleSize / 1000);
 		}
 	}
 }

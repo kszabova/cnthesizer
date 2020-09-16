@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
 
 namespace Cnthesizer
 {
@@ -44,9 +45,6 @@ namespace Cnthesizer
 
 			// set beat as not-playing
 			BeatPlaying = false;
-
-			// initialize recorder
-			recording = Recording.CreateRecording(this);
 		}
 
 		public static Session CreateSession() => new Session();
@@ -61,6 +59,13 @@ namespace Cnthesizer
 				WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
 				Mixer.AddInputStream(inputStream.Channel);
 				CurrentlyPlaying[frequencyIndex] = true;
+
+				//
+				if (recording != null)
+				{
+					List<FrequenciesAvailable> freqs = GetFrequenciesPlaying();
+					recording.AddNewEpoch(freqs);
+				}
 			}
 		}
 
@@ -72,6 +77,13 @@ namespace Cnthesizer
 			WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
 			Mixer.RemoveInputStream(inputStream.Channel);
 			CurrentlyPlaying[frequencyIndex] = false;
+
+			// 
+			if (recording != null)
+			{
+				List<FrequenciesAvailable> freqs = GetFrequenciesPlaying();
+				recording.AddNewEpoch(freqs);
+			}
 		}
 
 		public void StartPlayingBeat(int bpm)
@@ -106,7 +118,13 @@ namespace Cnthesizer
 			Recorder.Dispose();
 		}
 
-		public void StartRecording() => recording.StartRecording();
+		public void StartRecording()
+		{
+			// check that we aren't already recording
+
+			recording = Recording.CreateRecording(this);
+			recording.StartRecording();
+		}
 
 		public void StopRecording() => recording.StopRecording();
 
