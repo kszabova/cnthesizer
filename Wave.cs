@@ -25,7 +25,6 @@ namespace Cnthesizer
 			}
 		}
 
-
 		public static byte[] A = ConvertShortWaveToBytes(CreateShortWave(FrequenciesAvailable.C1, SAMPLE_RATE));
 
 		internal static short[] CreateShortWave(FrequenciesAvailable frequencyCode, int length)
