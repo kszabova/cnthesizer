@@ -46,7 +46,7 @@ namespace Cnthesizer
 			return binaryWave;
 		}
 
-		public static byte[] GenerateBeatWave(int bpm)
+		public static short[] GenerateBeatWave(int bpm)
 		{
 			// 60 / bpm gives us the period of beat envelope
 			// data loss from casting to int will be negligible
@@ -60,8 +60,7 @@ namespace Cnthesizer
 				double toneWave = (short.MaxValue / 8) * Math.Sign(Math.Sin(Math.PI * 2 * frequency / SAMPLE_RATE * i));
 				wave[i] = Convert.ToInt16(sineValue * toneWave);
 			}
-			Buffer.BlockCopy(wave, 0, binaryWave, 0, wave.Length * sizeof(short));
-			return binaryWave;
+			return wave;
 		}
 
 		public static byte[] CreateEmptyWave(int length = 44100)

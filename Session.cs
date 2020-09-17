@@ -19,6 +19,7 @@ namespace Cnthesizer
 		public bool[] CurrentlyPlaying { get; }
 		public WavePlayer Beat { get; private set; }
 		public bool BeatPlaying { get; private set; }
+		public int CurrentBpm { get; private set; }
 
 		private readonly string defaultBeatFilePath = "beat.wav";
 		private IRecorder recorder;
@@ -79,12 +80,14 @@ namespace Cnthesizer
 
 		public void StartPlayingBeat(int bpm)
 		{
-			byte[] beatWave = Wave.GenerateBeatWave(bpm);
+			byte[] beatWave = Wave.ConvertShortWaveToBytes(Wave.GenerateBeatWave(bpm));
 			using (FileStream fs = File.Create(defaultBeatFilePath))
-				Wave.WriteToStream(fs, beatWave, beatWave.Length / sizeof(short), SAMPLE_RATE, BITS_PER_SAMPLE, CHANNELS);
+				Wave.WriteToStream(fs, beatWave, beatWave.Length / sizeof(short),
+					SAMPLE_RATE, BITS_PER_SAMPLE, CHANNELS);
 			Beat = new WavePlayer(defaultBeatFilePath);
 			Mixer.AddInputStream(Beat.Channel);
 			BeatPlaying = true;
+			CurrentBpm = bpm;
 		}
 
 		public void StopPlayingBeat()
@@ -110,7 +113,8 @@ namespace Cnthesizer
 		{
 			if (recorder.IsActive) return;
 
-			recorder = Cnthesizer.Recorder.CreateRecording(this);
+			recorder = Recorder.CreateRecording(this);
+			Beat.Channel.Seek(0, SeekOrigin.Begin);
 			recorder.StartRecording();
 		}
 
@@ -118,6 +122,7 @@ namespace Cnthesizer
 		{
 			if (!recorder.IsActive) return;
 
+			StopPlayingBeat();
 			UpdateRecorder();
 			recorder.StopRecording();
 			recorder = RecorderPlaceholder.Instance;

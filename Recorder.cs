@@ -24,12 +24,12 @@ namespace Cnthesizer
 		public bool IsActive => true;
 		public string Filename { get; set; }
 		private Session session { get; }
-		private bool isRecording = false;
 		private List<Epoch> epochs { get; }
 		private Stopwatch stopwatch;
 		private long lastStopwatchMillis;
 		private WaveChannel32 recording;
 		private DirectSoundOut output;
+		private int bpm;
 
 		private Recorder(Session session)
 		{
@@ -44,13 +44,12 @@ namespace Cnthesizer
 
 		public void StartRecording()
 		{
-			isRecording = true;
 			stopwatch.Start();
+			bpm = session.BeatPlaying ? session.CurrentBpm : 0;
 		}
 
 		public void StopRecording()
 		{
-			isRecording = false;
 			stopwatch.Stop();
 			SaveRecording();
 			ModifyRecording();
@@ -58,9 +57,10 @@ namespace Cnthesizer
 
 		public void AddNewEpoch(List<FrequenciesAvailable> frequencies)
 		{
-			long elaspsedMilis = stopwatch.ElapsedMilliseconds;
-			epochs.Add(Epoch.CreateEpoch(elaspsedMilis - lastStopwatchMillis, frequencies));
-			lastStopwatchMillis = elaspsedMilis;
+			long elapsedMilis = stopwatch.ElapsedMilliseconds;
+			long duration = elapsedMilis - lastStopwatchMillis;
+			epochs.Add(Epoch.CreateEpoch(duration, frequencies));
+			lastStopwatchMillis = elapsedMilis;
 		}
 
 		public void Playback()
@@ -72,12 +72,15 @@ namespace Cnthesizer
 		private void SaveRecording()
 		{
 			short[] wave = ConcatWaves();
-			byte[] binaryWave = Wave.ConvertShortWaveToBytes(wave);
+			short[] beat = GenerateBeat(bpm, wave.Length);
+			short[] combinedWave = Mixing.MixTwoWaves(wave, beat);
+			byte[] binaryWave = Wave.ConvertShortWaveToBytes(combinedWave);
 			SaveRecordingForm saveRecording = new SaveRecordingForm(this);
 			saveRecording.ShowDialog();
 			using (FileStream fs = File.Create(Filename))
 			{
-				Wave.WriteToStream(fs, binaryWave, wave.Length, session.SAMPLE_RATE, session.BITS_PER_SAMPLE, session.CHANNELS);
+				Wave.WriteToStream(fs, binaryWave, wave.Length,
+					session.SAMPLE_RATE, session.BITS_PER_SAMPLE, session.CHANNELS);
 			}
 
 			recording = new WaveChannel32(new WaveFileReader(Filename));
@@ -100,6 +103,19 @@ namespace Cnthesizer
 			}
 			short[] wave = waves.SelectMany(w => w).ToArray();
 			return wave;
+		}
+
+		private short[] GenerateBeat(int bpm, int samples)
+		{
+			if (bpm != 0)
+			{
+				short[] beat = Wave.GenerateBeatWave(bpm);
+				return beat.MultiplyToLength(samples);
+			}
+			else
+			{
+				return new short[samples];
+			}
 		}
 	}
 
