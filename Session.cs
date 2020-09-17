@@ -27,15 +27,15 @@ namespace Cnthesizer
 		private Session()
 		{
 			// set all frequencies as not-playing 
-			CurrentlyPlaying = new bool[Enum.GetNames(typeof(FrequenciesAvailable)).Length];
-			foreach (FrequenciesAvailable frequency in Enum.GetValues(typeof(FrequenciesAvailable)))
+			CurrentlyPlaying = new bool[Enum.GetNames(typeof(Pitch)).Length];
+			foreach (Pitch frequency in Enum.GetValues(typeof(Pitch)))
 			{
 				CurrentlyPlaying[(int)frequency] = false;
 			}
 
 			// initialize mixer with "silence" playing
 			Mixer = new MixingWaveProvider32(new List<WaveChannel32> { WavePlayers.Empty.Channel });
-			CurrentlyPlaying[(int)FrequenciesAvailable.Empty] = true;
+			CurrentlyPlaying[(int)Pitch.Empty] = true;
 
 			// initialize output
 			Output = new DirectSoundOut();
@@ -54,7 +54,7 @@ namespace Cnthesizer
 		public void StartPlayingFrequency(int frequencyIndex)
 		{
 			// do nothing if no tone is added
-			if (frequencyIndex == (int)FrequenciesAvailable.Empty) return;
+			if (frequencyIndex == (int)Pitch.Empty) return;
 
 			if (!CurrentlyPlaying[frequencyIndex])
 			{
@@ -71,7 +71,7 @@ namespace Cnthesizer
 			UpdateRecorder();
 
 			// do nothing if no tone was released
-			if (frequencyIndex == (int)FrequenciesAvailable.Empty) return;
+			if (frequencyIndex == (int)Pitch.Empty) return;
 
 			WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
 			Mixer.RemoveInputStream(inputStream.Channel);
@@ -132,10 +132,10 @@ namespace Cnthesizer
 			recorder = RecorderPlaceholder.Instance;
 		}
 
-		private List<FrequenciesAvailable> GetFrequenciesPlaying()
+		private List<Pitch> GetFrequenciesPlaying()
 		{
-			List<FrequenciesAvailable> frequenciesPlaying = new List<FrequenciesAvailable> { };
-			foreach (FrequenciesAvailable frequency in Enum.GetValues(typeof(FrequenciesAvailable)))
+			List<Pitch> frequenciesPlaying = new List<Pitch> { };
+			foreach (Pitch frequency in Enum.GetValues(typeof(Pitch)))
 			{
 				if (CurrentlyPlaying[(int)frequency])
 					frequenciesPlaying.Add(frequency);
@@ -145,7 +145,7 @@ namespace Cnthesizer
 
 		private void UpdateRecorder()
 		{
-			List<FrequenciesAvailable> freqs = GetFrequenciesPlaying();
+			List<Pitch> freqs = GetFrequenciesPlaying();
 			recorder.AddNewEpoch(freqs);
 		}
 	}

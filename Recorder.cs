@@ -16,7 +16,7 @@ namespace Cnthesizer
 		string Filename { get; set; }
 		void StartRecording();
 		void StopRecording();
-		void AddNewEpoch(List<FrequenciesAvailable> frequencies);
+		void AddNewEpoch(List<Pitch> frequencies);
 		void Playback();
 		void StopPlayback(bool dispose);
 		void RegenerateRecording(Shift shift);
@@ -61,7 +61,7 @@ namespace Cnthesizer
 			ModifyRecording();
 		}
 
-		public void AddNewEpoch(List<FrequenciesAvailable> frequencies)
+		public void AddNewEpoch(List<Pitch> frequencies)
 		{
 			long elapsedMilis = stopwatch.ElapsedMilliseconds;
 			long duration = elapsedMilis - lastStopwatchMillis;
@@ -175,7 +175,7 @@ namespace Cnthesizer
 
 		private RecorderPlaceholder() { }
 
-		public void AddNewEpoch(List<FrequenciesAvailable> frequencies) { }
+		public void AddNewEpoch(List<Pitch> frequencies) { }
 
 		public void StartRecording() { }
 

@@ -18,22 +18,22 @@ namespace Cnthesizer
 
 		public Wave()
 		{
-			foreach (FrequenciesAvailable frequency in Enum.GetValues(typeof(FrequenciesAvailable)))
+			foreach (Pitch frequency in Enum.GetValues(typeof(Pitch)))
 			{
 				byte[] wave = ConvertShortWaveToBytes(CreateShortWave(frequency, SAMPLE_RATE));
 				Waves.Add(wave);
 			}
 		}
 
-		public static byte[] A = ConvertShortWaveToBytes(CreateShortWave(FrequenciesAvailable.C1, SAMPLE_RATE));
+		public static byte[] A = ConvertShortWaveToBytes(CreateShortWave(Pitch.C1, SAMPLE_RATE));
 
-		internal static short[] CreateShortWave(FrequenciesAvailable frequencyCode, int length)
+		internal static short[] CreateShortWave(Pitch frequencyCode, int length)
 			=> CreateShortWave(frequencyCode, length, Shifts.Unison);
 
-		internal static short[] CreateShortWave(FrequenciesAvailable frequencyCode, int length, Shift shift)
+		internal static short[] CreateShortWave(Pitch frequencyCode, int length, Shift shift)
 		{
 			short[] wave = new short[length];
-			float frequency = shift(Frequencies.Freqs[(int)frequencyCode]);
+			float frequency = shift(Frequency.Freqs[(int)frequencyCode]);
 			for (int i = 0; i < length; ++i)
 			{
 				wave[i] = Convert.ToInt16(short.MaxValue * Math.Sin(((Math.PI * 2 * frequency) / SAMPLE_RATE) * i));  // TODO: shouldn't we replace SAMPLE RATE with length?
