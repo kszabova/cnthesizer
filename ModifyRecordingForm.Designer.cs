@@ -30,6 +30,8 @@
 		{
 			this.playButton = new System.Windows.Forms.Button();
 			this.shiftSelectorComboBox = new System.Windows.Forms.ComboBox();
+			this.stopButton = new System.Windows.Forms.Button();
+			this.pitchShiftLabel = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// playButton
@@ -44,24 +46,47 @@
 			// 
 			// shiftSelectorComboBox
 			// 
+			this.shiftSelectorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.shiftSelectorComboBox.FormattingEnabled = true;
-			this.shiftSelectorComboBox.Location = new System.Drawing.Point(42, 173);
+			this.shiftSelectorComboBox.Location = new System.Drawing.Point(40, 208);
 			this.shiftSelectorComboBox.Name = "shiftSelectorComboBox";
 			this.shiftSelectorComboBox.Size = new System.Drawing.Size(180, 24);
 			this.shiftSelectorComboBox.TabIndex = 1;
 			this.shiftSelectorComboBox.SelectedIndexChanged += new System.EventHandler(this.shiftSelectorComboBox_SelectedIndexChanged);
+			// 
+			// stopButton
+			// 
+			this.stopButton.Location = new System.Drawing.Point(226, 34);
+			this.stopButton.Name = "stopButton";
+			this.stopButton.Size = new System.Drawing.Size(140, 103);
+			this.stopButton.TabIndex = 2;
+			this.stopButton.Text = "Stop";
+			this.stopButton.UseVisualStyleBackColor = true;
+			this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
+			// 
+			// pitchShiftLabel
+			// 
+			this.pitchShiftLabel.AutoSize = true;
+			this.pitchShiftLabel.Location = new System.Drawing.Point(37, 175);
+			this.pitchShiftLabel.Name = "pitchShiftLabel";
+			this.pitchShiftLabel.Size = new System.Drawing.Size(111, 17);
+			this.pitchShiftLabel.TabIndex = 3;
+			this.pitchShiftLabel.Text = "Select pitch shift";
 			// 
 			// ModifyRecordingForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.pitchShiftLabel);
+			this.Controls.Add(this.stopButton);
 			this.Controls.Add(this.shiftSelectorComboBox);
 			this.Controls.Add(this.playButton);
 			this.Name = "ModifyRecordingForm";
 			this.Text = "Modify recording";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ModifyRecordingForm_FormClosed);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -69,5 +94,7 @@
 
 		private System.Windows.Forms.Button playButton;
 		private System.Windows.Forms.ComboBox shiftSelectorComboBox;
+		private System.Windows.Forms.Button stopButton;
+		private System.Windows.Forms.Label pitchShiftLabel;
 	}
 }

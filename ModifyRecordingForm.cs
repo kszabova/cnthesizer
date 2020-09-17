@@ -44,5 +44,10 @@ namespace Cnthesizer
 			Shift shift = Shifts.shifts[shiftSelectorComboBox.SelectedIndex];
 			recorder.RegenerateRecording(shift);
 		}
+
+		private void stopButton_Click(object sender, EventArgs e)
+		{
+			recorder.StopPlayback(false);
+		}
 	}
 }
