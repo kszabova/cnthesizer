@@ -24,5 +24,10 @@ namespace Cnthesizer
 		{
 			recorder.Playback();
 		}
+
+		private void ModifyRecordingForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			recorder.StopPlayback();
+		}
 	}
 }

@@ -49,6 +49,7 @@
 			this.Controls.Add(this.playButton);
 			this.Name = "ModifyRecordingForm";
 			this.Text = "ModifyRecordingForm";
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ModifyRecordingForm_FormClosed);
 			this.ResumeLayout(false);
 
 		}

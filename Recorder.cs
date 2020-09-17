@@ -17,6 +17,7 @@ namespace Cnthesizer
 		void StopRecording();
 		void AddNewEpoch(List<FrequenciesAvailable> frequencies);
 		void Playback();
+		void StopPlayback();
 	}
 
 	class Recorder : IRecorder
@@ -67,6 +68,11 @@ namespace Cnthesizer
 		{
 			recording.Seek(0, SeekOrigin.Begin);
 			output.Play();
+		}
+
+		public void StopPlayback()
+		{
+			output.Stop();
 		}
 
 		private void SaveRecording()
@@ -142,5 +148,7 @@ namespace Cnthesizer
 		public void StopRecording() { }
 
 		public void Playback() { }
+
+		public void StopPlayback() { }
 	}
 }
