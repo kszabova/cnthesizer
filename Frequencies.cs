@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cnthesizer
 {
-	enum FrequenciesAvailable
+	public enum FrequenciesAvailable
 	{
 		Empty, C0, D, E, F, G, A, B, C1
 	}
