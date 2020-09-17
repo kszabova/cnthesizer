@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Cnthesizer
 {
-	public partial class SaveRecordingForm : Form
+	partial class SaveRecordingForm : Form
 	{
 		private IRecorder recorder;
 

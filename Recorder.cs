@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace Cnthesizer
 {
-	public interface IRecorder
+	interface IRecorder
 	{
 		bool IsActive { get; }
 		string Filename { get; set; }
 		void StartRecording();
 		void StopRecording();
 		void AddNewEpoch(List<FrequenciesAvailable> frequencies);
+		void Playback();
 	}
 
 	class Recorder : IRecorder
@@ -22,10 +24,12 @@ namespace Cnthesizer
 		public bool IsActive => true;
 		public string Filename { get; set; }
 		private Session session { get; }
+		private bool isRecording = false;
 		private List<Epoch> epochs { get; }
-		private bool recording = false;
 		private Stopwatch stopwatch;
 		private long lastStopwatchMillis;
+		private WaveChannel32 recording;
+		private DirectSoundOut output;
 
 		private Recorder(Session session)
 		{
@@ -40,15 +44,16 @@ namespace Cnthesizer
 
 		public void StartRecording()
 		{
-			recording = true;
+			isRecording = true;
 			stopwatch.Start();
 		}
 
 		public void StopRecording()
 		{
-			recording = false;
+			isRecording = false;
 			stopwatch.Stop();
 			SaveRecording();
+			ModifyRecording();
 		}
 
 		public void AddNewEpoch(List<FrequenciesAvailable> frequencies)
@@ -56,6 +61,12 @@ namespace Cnthesizer
 			long elaspsedMilis = stopwatch.ElapsedMilliseconds;
 			epochs.Add(Epoch.CreateEpoch(elaspsedMilis - lastStopwatchMillis, frequencies));
 			lastStopwatchMillis = elaspsedMilis;
+		}
+
+		public void Playback()
+		{
+			recording.Seek(0, SeekOrigin.Begin);
+			output.Play();
 		}
 
 		private void SaveRecording()
@@ -68,14 +79,16 @@ namespace Cnthesizer
 			{
 				Wave.WriteToStream(fs, binaryWave, wave.Length, session.SAMPLE_RATE, session.BITS_PER_SAMPLE, session.CHANNELS);
 			}
+
+			recording = new WaveChannel32(new WaveFileReader(Filename));
+			output = new DirectSoundOut();
+			output.Init(recording);
 		}
 
-		private void Playback()
+		private void ModifyRecording()
 		{
-			// pull saved file
-			// get IWaveOut or whatever from parent session
-			// play recording on it
-			throw new NotImplementedException();
+			ModifyRecordingForm modifyRecording = new ModifyRecordingForm(this);
+			modifyRecording.ShowDialog();
 		}
 
 		private short[] ConcatWaves()
@@ -111,5 +124,7 @@ namespace Cnthesizer
 		public void StartRecording() { }
 
 		public void StopRecording() { }
+
+		public void Playback() { }
 	}
 }
