@@ -92,8 +92,11 @@ namespace Cnthesizer
 
 		public void StopPlayingBeat()
 		{
-			Mixer.RemoveInputStream(Beat.Channel);
-			Beat.Dispose();
+			if (Beat != null)
+			{
+				Mixer.RemoveInputStream(Beat.Channel);
+				Beat.Dispose();
+			}
 			Beat = null;
 			BeatPlaying = false;
 		}
@@ -114,7 +117,8 @@ namespace Cnthesizer
 			if (recorder.IsActive) return;
 
 			recorder = Recorder.CreateRecording(this);
-			Beat.Channel.Seek(0, SeekOrigin.Begin);
+			// reset beat
+			if (Beat != null) Beat.Channel.Seek(0, SeekOrigin.Begin);
 			recorder.StartRecording();
 		}
 

@@ -28,9 +28,12 @@ namespace Cnthesizer
 		public static byte[] A = ConvertShortWaveToBytes(CreateShortWave(FrequenciesAvailable.C1, SAMPLE_RATE));
 
 		internal static short[] CreateShortWave(FrequenciesAvailable frequencyCode, int length)
+			=> CreateShortWave(frequencyCode, length, Shifts.Unison);
+
+		internal static short[] CreateShortWave(FrequenciesAvailable frequencyCode, int length, Shift shift)
 		{
 			short[] wave = new short[length];
-			float frequency = Frequencies.Freqs[(int)frequencyCode];
+			float frequency = shift(Frequencies.Freqs[(int)frequencyCode]);
 			for (int i = 0; i < length; ++i)
 			{
 				wave[i] = Convert.ToInt16(short.MaxValue * Math.Sin(((Math.PI * 2 * frequency) / SAMPLE_RATE) * i));  // TODO: shouldn't we replace SAMPLE RATE with length?

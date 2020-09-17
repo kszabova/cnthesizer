@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Cnthesizer
 {
@@ -17,12 +18,14 @@ namespace Cnthesizer
 		void StopRecording();
 		void AddNewEpoch(List<FrequenciesAvailable> frequencies);
 		void Playback();
-		void StopPlayback();
+		void StopPlayback(bool dispose);
+		void RegenerateRecording(Shift shift);
 	}
 
 	class Recorder : IRecorder
 	{
 		public bool IsActive => true;
+		public bool IsPitchModified { get; set; }
 		public string Filename { get; set; }
 		private Session session { get; }
 		private List<Epoch> epochs { get; }
@@ -31,10 +34,12 @@ namespace Cnthesizer
 		private WaveChannel32 recording;
 		private DirectSoundOut output;
 		private int bpm;
+		private short[] beatWave;
 
 		private Recorder(Session session)
 		{
 			this.session = session;
+			IsPitchModified = false;
 			Filename = "recording.wav";
 			epochs = new List<Epoch> { };
 			stopwatch = new Stopwatch();
@@ -70,17 +75,42 @@ namespace Cnthesizer
 			output.Play();
 		}
 
-		public void StopPlayback()
+		public void StopPlayback(bool dispose = false)
 		{
 			output.Stop();
+			if (dispose)
+			{
+				output.Dispose();
+				recording.Dispose();
+			}
+		}
+
+		public void RegenerateRecording(Shift shift)
+		{
+			output.Dispose();
+			recording.Dispose();
+
+			short[] wave = ConcatWaves(shift);
+			short[] combinedWave = Mixing.MixTwoWaves(wave, beatWave);
+			byte[] binaryWave = Wave.ConvertShortWaveToBytes(combinedWave);
+
+			using (FileStream fs = File.Create(Filename))
+			{
+				Wave.WriteToStream(fs, binaryWave, wave.Length,
+					session.SAMPLE_RATE, session.BITS_PER_SAMPLE, session.CHANNELS);
+			}
+			
+			recording = new WaveChannel32(new WaveFileReader(Filename));
+			output = new DirectSoundOut();
+			output.Init(recording);
 		}
 
 		private void SaveRecording()
 		{
 			// generate recorded wave
-			short[] wave = ConcatWaves();
-			short[] beat = GenerateBeat(bpm, wave.Length);
-			short[] combinedWave = Mixing.MixTwoWaves(wave, beat);
+			short[] wave = ConcatWaves(Shifts.Unison);
+			beatWave = GenerateBeat(bpm, wave.Length);
+			short[] combinedWave = Mixing.MixTwoWaves(wave, beatWave);
 			byte[] binaryWave = Wave.ConvertShortWaveToBytes(combinedWave);
 
 			// save recording to file
@@ -104,12 +134,12 @@ namespace Cnthesizer
 			modifyRecording.ShowDialog();
 		}
 
-		private short[] ConcatWaves()
+		private short[] ConcatWaves(Shift shift)
 		{
 			List<short[]> waves = new List<short[]> { };
 			foreach (Epoch epoch in epochs)
 			{
-				waves.Add(epoch.ConvertToWave(session.SAMPLE_RATE));
+				waves.Add(epoch.ConvertToWave(session.SAMPLE_RATE, shift));
 			}
 			short[] wave = waves.SelectMany(w => w).ToArray();
 			return wave;
@@ -153,6 +183,8 @@ namespace Cnthesizer
 
 		public void Playback() { }
 
-		public void StopPlayback() { }
+		public void StopPlayback(bool dispose) { }
+
+		public void RegenerateRecording(Shift shift) { }
 	}
 }

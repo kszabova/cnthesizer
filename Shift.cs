@@ -32,8 +32,17 @@ namespace Cnthesizer
 		public static float PerfectFifthDown(float frequency) => frequency / 3 * 2;
 		public static float MinSixthDown(float frequency) => frequency / 8 * 5;
 		public static float MajSixthDown(float frequency) => frequency / 5 * 3;
-		public static float MinSeventhDown(float frequency) => frequency / 9 * 16;
-		public static float MajSeventhDown(float frequency) => frequency / 8 * 15;
+		public static float MinSeventhDown(float frequency) => frequency / 16 * 9;
+		public static float MajSeventhDown(float frequency) => frequency / 15 * 7;
 		public static float OctaveDown(float frequency) => frequency / 2;
+
+		public static Shift[] shifts = new Shift[]
+		{
+			OctaveUp, MajSeventhUp, MinSeventhUp, MajSixthUp, MinSixthUp,
+			PerfectFifthUp, TritoneUp, PerfectFourthUp, MajThirdUp, MinThirdUp,
+			MajSecondUp, MinSecondUp, Unison, MinSecondDown, MajSecondDown,
+			MinThirdDown, MajThirdDown, PerfectFourthDown, TritoneDown, PerfectFifthDown,
+			MinSixthDown, MajSixthDown, MinSeventhDown, MajSeventhDown, OctaveDown
+		};
 	}
 }
