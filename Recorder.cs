@@ -77,10 +77,13 @@ namespace Cnthesizer
 
 		private void SaveRecording()
 		{
+			// generate recorded wave
 			short[] wave = ConcatWaves();
 			short[] beat = GenerateBeat(bpm, wave.Length);
 			short[] combinedWave = Mixing.MixTwoWaves(wave, beat);
 			byte[] binaryWave = Wave.ConvertShortWaveToBytes(combinedWave);
+
+			// save recording to file
 			SaveRecordingForm saveRecording = new SaveRecordingForm(this);
 			saveRecording.ShowDialog();
 			using (FileStream fs = File.Create(Filename))
@@ -89,6 +92,7 @@ namespace Cnthesizer
 					session.SAMPLE_RATE, session.BITS_PER_SAMPLE, session.CHANNELS);
 			}
 
+			// initialize output with recording
 			recording = new WaveChannel32(new WaveFileReader(Filename));
 			output = new DirectSoundOut();
 			output.Init(recording);

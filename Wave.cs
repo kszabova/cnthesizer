@@ -89,8 +89,8 @@ namespace Cnthesizer
 					binaryWriter.Write(16);														// 4B Subchunk1Size
 					binaryWriter.Write((short)1);												// 2B AudioFormat
 					binaryWriter.Write((short)channels);										// 2B NumChannels
-					binaryWriter.Write(SAMPLE_RATE);											// 4B SampleRate
-					binaryWriter.Write(SAMPLE_RATE * blockAlign);								// 4B ByteRate
+					binaryWriter.Write(sampleRate);												// 4B SampleRate
+					binaryWriter.Write(sampleRate * blockAlign);								// 4B ByteRate
 					binaryWriter.Write((short)(blockAlign));									// 2B BlockAlign
 					binaryWriter.Write(BITS_PER_SAMPLE);										// 2B BitsPerSample
 					binaryWriter.Write(new[] { 'd', 'a', 't', 'a' });							// 4B Subchunk2Id
