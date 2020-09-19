@@ -102,6 +102,7 @@
 			this.Load += new System.EventHandler(this.CnthesizerForm_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CnthesizerForm_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CnthesizerForm_KeyUp);
+			this.MouseEnter += new System.EventHandler(this.UpdateBeatButtonText);
 			((System.ComponentModel.ISupportInitialize)(this.bpmSlider)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

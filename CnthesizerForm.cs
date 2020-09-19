@@ -74,5 +74,10 @@ namespace Cnthesizer
 		{
 			session.StopRecording();
 		}
+
+		private void UpdateBeatButtonText(object sender, EventArgs e)
+		{
+			beatButton.Text = session.BeatPlaying ? "Stop beat" : "Play beat";
+		}
 	}
 }

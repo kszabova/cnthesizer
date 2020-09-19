@@ -11,7 +11,7 @@ namespace Cnthesizer
 		Empty, C0, D, E, F, G, A, B, C1
 	}
 
-	public static class Frequency
+	public class Frequency
 	{
 		public static readonly float Empty = 0f;
 		public static readonly float C0 = 261.36f;
