@@ -72,31 +72,31 @@ namespace Cnthesizer
 		private static readonly List<WaveFileReader> WaveFileReaders;
 		private static readonly List<WaveChannel32> WaveChannels;
 		private static readonly List<WavePlayer> WavePlayers;
+		private static List<string> waveFileNames = new List<string>
+		{
+			"empty.wav",
+			"a3.wav", "am3.wav", "b3.wav", "c4.wav", "cm4.wav", "d4.wav", "dm4.wav", "e4.wav", "f4.wav", "fm4.wav", "g4.wav", "gm4.wav",
+			"a4.wav", "am4.wav", "b4.wav", "c5.wav", "cm5.wav", "d5.wav", "dm5.wav", "e5.wav", "f5.wav", "fm5.wav", "g5.wav", "gm5.wav",
+			"a5.wav", "am5.wav", "b5.wav", "c6.wav", "cm6.wav", "d6.wav", "dm6.wav", "e6.wav", "f6.wav", "fm6.wav", "g6.wav", "gm6.wav",
+			"a6.wav"
+		};
 
 		static PitchSelector()
 		{
-			List<string> waveFileNames = new List<string>
-			{
-				"empty.wav",
-				"a3.wav", "am3.wav", "b3.wav", "c4.wav", "cm4.wav", "d4.wav", "dm4.wav", "e4.wav", "f4.wav", "fm4.wav", "g4.wav", "gm4.wav",
-				"a4.wav", "am4.wav", "b4.wav", "c5.wav", "cm5.wav", "d5.wav", "dm5.wav", "e5.wav", "f5.wav", "fm5.wav", "g5.wav", "gm5.wav",
-				"a5.wav", "am5.wav", "b5.wav", "c6.wav", "cm6.wav", "d6.wav", "dm6.wav", "e6.wav", "f6.wav", "fm6.wav", "g6.wav", "gm6.wav",
-				"a6.wav"
-			};
-
 			foreach (Pitch pitch in EnumeratePitches())
 			{
-				WaveFileReaders.Add(new WaveFileReader(waveFileNames[(int)pitch]));
-				WaveChannels.Add(new WaveChannel32(WaveFileReaders[(int)pitch]));
-				WavePlayers.Add(new WavePlayer(waveFileNames[(int)pitch]));
+				WaveFileReaders.Add(new WaveFileReader(GetWaveFilename(pitch)));
+				WaveChannels.Add(new WaveChannel32(GetWaveFileReader(pitch)));
+				WavePlayers.Add(new WavePlayer(GetWaveFilename(pitch)));
 			}
 		}
 
+		public static string GetWaveFilename(Pitch pitch) => waveFileNames[(int)pitch];
 		public static WaveFileReader GetWaveFileReader(Pitch pitch) => WaveFileReaders[(int)pitch];
 		public static WaveChannel32 GetWaveChannel(Pitch pitch) => WaveChannels[(int)pitch];
 		public static WavePlayer GetWavePlayer(Pitch pitch) => WavePlayers[(int)pitch];
 
-		private static IEnumerable<Pitch> EnumeratePitches()
+		public static IEnumerable<Pitch> EnumeratePitches()
 		{
 			foreach (Pitch pitch in Enum.GetValues(typeof(Pitch))) yield return pitch;
 		}
