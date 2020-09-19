@@ -111,5 +111,15 @@ namespace Cnthesizer
 		{
 			foreach (Pitch pitch in Enum.GetValues(typeof(Pitch))) yield return pitch;
 		}
+
+		public static Pitch ShiftPitchBySemitones(Pitch pitch, int semitones)
+		{
+			int oldIndex = (int)pitch;
+			int newIndex = oldIndex + semitones;
+			if (newIndex < 1 || newIndex >= Enum.GetNames(typeof(Pitch)).Length)
+				throw new ApplicationException("Invalid number of semitones");
+			else
+				return (Pitch)newIndex;
+		}
 	}
 }

@@ -8,90 +8,57 @@ namespace Cnthesizer
 {
 	public enum ChordName
 	{
-		Ilow, ii, iii, IV, V, vi, vii, Ihigh
+		ilowMaj, iiMaj, iiiMaj, ivMaj, vMaj, viMaj, viiMaj, ihighMaj,
+		ilowMin, iiMin, iiiMin, ivMin, vMin, viMin, viiMin, ihighMin
 	}
 
 	class Chord
 	{
+		struct ChordShiftFromBase
+		{
+			public int first, second, third;
+			public ChordShiftFromBase(int first, int second, int third)
+				=> (this.first, this.second, this.third) = (first, second, third);
+		}
+
+		private Dictionary<ChordName, ChordShiftFromBase> chordShifts = new Dictionary<ChordName, ChordShiftFromBase>
+		{
+			{ChordName.ilowMaj, new ChordShiftFromBase(0, 4, 7) },
+			{ChordName.iiMaj, new ChordShiftFromBase(2, 5, 9) },
+			{ChordName.iiiMaj, new ChordShiftFromBase(4, 7, 11) },
+			{ChordName.ivMaj, new ChordShiftFromBase(5, 9, 12) },
+			{ChordName.vMaj, new ChordShiftFromBase(7, 11, 14) },
+			{ChordName.viMaj, new ChordShiftFromBase(9, 12, 16) },
+			{ChordName.viiMaj, new ChordShiftFromBase(11, 14, 17) },
+			{ChordName.ihighMaj, new ChordShiftFromBase(12, 16, 19) },
+			{ChordName.ilowMin, new ChordShiftFromBase(0, 3, 7) },
+			{ChordName.iiMin, new ChordShiftFromBase(2, 5, 8) },
+			{ChordName.iiiMin, new ChordShiftFromBase(3, 7, 10) },
+			{ChordName.ivMin, new ChordShiftFromBase(5, 8, 12) },
+			{ChordName.vMin, new ChordShiftFromBase(7, 10, 14) },
+			{ChordName.viMin, new ChordShiftFromBase(8, 12, 15) },
+			{ChordName.viiMin, new ChordShiftFromBase(10, 14, 17) },
+			{ChordName.ihighMin, new ChordShiftFromBase(12, 15, 19) }
+		};
+
+		public List<Pitch> Tones { get; }
 		private readonly Pitch scale;
 		private readonly ChordName chordName;
-		private Pitch baseFirst;
-		private Pitch baseSecond;
-		private Pitch baseThird;
 
 		public Chord(Pitch scale, ChordName chordName)
 		{
 			this.scale = scale;
 			this.chordName = chordName;
-			GetBaseChord();
+			Tones = GetChord();
 		}
 
-		public void GetBaseChord()
+		public List<Pitch> GetChord()
 		{
-			switch (chordName)
-			{
-				case ChordName.Ilow:
-					{
-						baseFirst = Pitch.C4;
-						baseSecond = Pitch.E4;
-						baseThird = Pitch.G4;
-						break;
-					}
-				case ChordName.ii:
-					{
-						baseFirst = Pitch.D4;
-						baseSecond = Pitch.F4;
-						baseThird = Pitch.A4;
-						break;
-					}
-				case ChordName.iii:
-					{
-						baseFirst = Pitch.E4;
-						baseSecond = Pitch.G4;
-						baseThird = Pitch.B4;
-						break;
-					}
-				case ChordName.IV:
-					{
-						baseFirst = Pitch.F4;
-						baseSecond = Pitch.A4;
-						baseThird = Pitch.C5;
-						break;
-					}
-				case ChordName.V:
-					{
-						baseFirst = Pitch.G4;
-						baseSecond = Pitch.B4;
-						baseThird = Pitch.D5;
-						break;
-					}
-				case ChordName.vi:
-					{
-						baseFirst = Pitch.A4;
-						baseSecond = Pitch.C5;
-						baseThird = Pitch.E5;
-						break;
-					}
-				case ChordName.vii:
-					{
-						baseFirst = Pitch.B4;
-						baseSecond = Pitch.D5;
-						baseThird = Pitch.F5;
-						break;
-					}
-				case ChordName.Ihigh:
-					{
-						baseFirst = Pitch.C5;
-						baseSecond = Pitch.E5;
-						baseThird = Pitch.G5;
-						break;
-					}	
-			}
-		}
-
-		public void GetChordPitch()
-		{
-
+			List<Pitch> chord = new List<Pitch> { };
+			chord.Add(PitchSelector.ShiftPitchBySemitones(scale, chordShifts[chordName].first));
+			chord.Add(PitchSelector.ShiftPitchBySemitones(scale, chordShifts[chordName].third));
+			chord.Add(PitchSelector.ShiftPitchBySemitones(scale, chordShifts[chordName].third));
+			return chord;
 		}
 	}
 }
