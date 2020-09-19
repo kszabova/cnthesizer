@@ -25,14 +25,14 @@ namespace Cnthesizer
 
 		private void CnthesizerForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			int frequencyIndex = (int)KeyControls.GetFrequencyFromKey(e.KeyCode);
-			session.StartPlayingFrequency(frequencyIndex);
+			Pitch pitch = KeyControls.GetPitchFromKey(e.KeyCode);
+			session.StartPlayingPitch(pitch);
 		}
 
 		private void CnthesizerForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			int frequencyIndex = (int)KeyControls.GetFrequencyFromKey(e.KeyCode);
-			session.StopPlayingFrequency(frequencyIndex);
+			Pitch pitch = KeyControls.GetPitchFromKey(e.KeyCode);
+			session.StopPlayingPitch(pitch);
 		}
 
 		private void CnthesizerForm_Load(object sender, EventArgs e)

@@ -1,6 +1,7 @@
 ﻿using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,21 +58,23 @@ namespace Cnthesizer
 		private static readonly double Gm6 = 1661.219;
 		private static readonly double A6 = 1760;
 
-		public static double[] Freqs = {
+		private static double[] Freqs = {
 			Empty,
 			A3, Am3, B3, C4, Cm4, D4, Dm4, E4, F4, Fm4, G4, Gm4,
 			A4, Am4, B4, C5, Cm5, D5, Dm5, E5, F5, Fm5, G5, Gm5,
 			A5, Am5, B5, C6, Cm6, D6, Dm6, E6, F6, Fm6, G6, Gm6,
 			A6
 		};
+
+		public static double GetFrequency(Pitch pitch) => Freqs[(int)pitch];
 	}
 
 	public static class PitchSelector
 	{
 		public static readonly List<double> Frequencies;
-		private static readonly List<WaveFileReader> WaveFileReaders;
-		private static readonly List<WaveChannel32> WaveChannels;
-		private static readonly List<WavePlayer> WavePlayers;
+		private static readonly List<WaveFileReader> WaveFileReaders = new List<WaveFileReader> { };
+		private static readonly List<WaveChannel32> WaveChannels = new List<WaveChannel32> { };
+		private static readonly List<WavePlayer> WavePlayers = new List<WavePlayer> { };
 		private static List<string> waveFileNames = new List<string>
 		{
 			"empty.wav",
@@ -85,7 +88,15 @@ namespace Cnthesizer
 		{
 			foreach (Pitch pitch in EnumeratePitches())
 			{
-				WaveFileReaders.Add(new WaveFileReader(GetWaveFilename(pitch)));
+				try
+				{
+					WaveFileReaders.Add(new WaveFileReader(GetWaveFilename(pitch)));
+				}
+				catch (FileNotFoundException)
+				{
+					Wave.CreateWaveFile(GetWaveFilename(pitch), pitch);
+					WaveFileReaders.Add(new WaveFileReader(GetWaveFilename(pitch)));
+				}
 				WaveChannels.Add(new WaveChannel32(GetWaveFileReader(pitch)));
 				WavePlayers.Add(new WavePlayer(GetWaveFilename(pitch)));
 			}

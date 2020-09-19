@@ -10,36 +10,36 @@ namespace Cnthesizer
 {
 	static class KeyControls
 	{
-		public static Pitch GetFrequencyFromKey(Keys key)
+		public static Pitch GetPitchFromKey(Keys key)
 		{
 			switch (key)
 			{
-				case Keys.A:
-					return Pitch.C0;
-				case Keys.S:
-					return Pitch.D;
-				case Keys.D:
-					return Pitch.E;
-				case Keys.F:
-					return Pitch.F;
-				case Keys.G:
-					return Pitch.G;
-				case Keys.H:
-					return Pitch.A;
-				case Keys.J:
-					return Pitch.B;
-				case Keys.K:
-					return Pitch.C1;
+				//case Keys.A:
+				//	return Pitch.C0;
+				//case Keys.S:
+				//	return Pitch.D;
+				//case Keys.D:
+				//	return Pitch.E;
+				//case Keys.F:
+				//	return Pitch.F;
+				//case Keys.G:
+				//	return Pitch.G;
+				//case Keys.H:
+				//	return Pitch.A;
+				//case Keys.J:
+				//	return Pitch.B;
+				//case Keys.K:
+				//	return Pitch.C1;
 				default:
 					return Pitch.Empty;
 			}
 		}
 
 		public static WavePlayer GetWavePlayerFromKey(Keys key)
-			=> WavePlayers.WavePlayerList[(int)GetFrequencyFromKey(key)];
+			=> PitchSelector.GetWavePlayer(GetPitchFromKey(key));
 		public static WaveFileReader GetWaveFileReaderFromKey(Keys key)
-			=> WaveFileReaders.WaveFileReaderList[(int)GetFrequencyFromKey(key)];
+			=> PitchSelector.GetWaveFileReader(GetPitchFromKey(key));
 		public static WaveChannel32 GetWaveChannelFromKey(Keys key)
-			=> WaveChannels.WaveChannelList[(int)GetFrequencyFromKey(key)];
+			=> PitchSelector.GetWaveChannel(GetPitchFromKey(key));
 	}
 }

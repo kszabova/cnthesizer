@@ -9,31 +9,22 @@ using NAudio.Wave;
 
 namespace Cnthesizer
 {
-	class Wave
+	public class Wave
 	{
 		private static readonly int SAMPLE_RATE = 44100;
 		private static readonly short BITS_PER_SAMPLE = 16;
 
-		public static List<byte[]> Waves = new List<byte[]> { };
-
 		public Wave()
 		{
-			foreach (Pitch frequency in Enum.GetValues(typeof(Pitch)))
-			{
-				byte[] wave = ConvertShortWaveToBytes(CreateShortWave(frequency, SAMPLE_RATE));
-				Waves.Add(wave);
-			}
 		}
 
-		public static byte[] A = ConvertShortWaveToBytes(CreateShortWave(Pitch.C1, SAMPLE_RATE));
-
-		internal static short[] CreateShortWave(Pitch frequencyCode, int length)
+		public static short[] CreateShortWave(Pitch frequencyCode, int length)
 			=> CreateShortWave(frequencyCode, length, Shifts.Unison);
 
-		internal static short[] CreateShortWave(Pitch frequencyCode, int length, Shift shift)
+		internal static short[] CreateShortWave(Pitch pitch, int length, Shift shift)
 		{
 			short[] wave = new short[length];
-			float frequency = shift(Frequency.Freqs[(int)frequencyCode]);
+			double frequency = shift(Frequency.GetFrequency(pitch));
 			for (int i = 0; i < length; ++i)
 			{
 				wave[i] = Convert.ToInt16(short.MaxValue * Math.Sin(((Math.PI * 2 * frequency) / SAMPLE_RATE) * i));  // TODO: shouldn't we replace SAMPLE RATE with length?
@@ -42,7 +33,7 @@ namespace Cnthesizer
 			return wave;
 		}
 
-		internal static byte[] ConvertShortWaveToBytes(short[] wave)
+		public static byte[] ConvertShortWaveToBytes(short[] wave)
 		{
 			byte[] binaryWave = new byte[wave.Length * sizeof(short)];
 			Buffer.BlockCopy(wave, 0, binaryWave, 0, wave.Length * sizeof(short));
@@ -55,7 +46,6 @@ namespace Cnthesizer
 			// data loss from casting to int will be negligible
 			int length = (int)(60f / bpm * SAMPLE_RATE);
 			short[] wave = new short[length];
-			byte[] binaryWave = new byte[length * sizeof(short)];
 			float frequency = 440;		// hard-coded, whatever
 			for (int i = 0; i < length; ++i)
 			{
@@ -107,6 +97,17 @@ namespace Cnthesizer
 						stream.Write(buf, 0, len);
 					}
 				}
+		}
+
+		public static void CreateWaveFile(string filename, Pitch pitch)
+		{
+			short[] shortWave = Wave.CreateShortWave(pitch, 44100);
+			byte[] binaryWave = Wave.ConvertShortWaveToBytes(shortWave);
+
+			using (FileStream fs = File.Create(filename))
+			{
+				Wave.WriteToStream(fs, binaryWave, 44100, 44100, 16, 1);
+			}
 		}
 	}
 }

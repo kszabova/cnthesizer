@@ -32,58 +32,58 @@ namespace Cnthesizer
 			{
 				case ChordName.Ilow:
 					{
-						baseFirst = Pitch.C0;
-						baseSecond = Pitch.E;
-						baseThird = Pitch.G;
+						baseFirst = Pitch.C4;
+						baseSecond = Pitch.E4;
+						baseThird = Pitch.G4;
 						break;
 					}
 				case ChordName.ii:
 					{
-						baseFirst = Pitch.D;
-						baseSecond = Pitch.F;
-						baseThird = Pitch.A;
+						baseFirst = Pitch.D4;
+						baseSecond = Pitch.F4;
+						baseThird = Pitch.A4;
 						break;
 					}
 				case ChordName.iii:
 					{
-						baseFirst = Pitch.E;
-						baseSecond = Pitch.G;
-						baseThird = Pitch.B;
+						baseFirst = Pitch.E4;
+						baseSecond = Pitch.G4;
+						baseThird = Pitch.B4;
 						break;
 					}
 				case ChordName.IV:
 					{
-						baseFirst = Pitch.F;
-						baseSecond = Pitch.A;
-						baseThird = Pitch.C1;
+						baseFirst = Pitch.F4;
+						baseSecond = Pitch.A4;
+						baseThird = Pitch.C5;
 						break;
 					}
 				case ChordName.V:
 					{
-						baseFirst = Pitch.G;
-						baseSecond = Pitch.B;
-						baseThird = Pitch.D1;
+						baseFirst = Pitch.G4;
+						baseSecond = Pitch.B4;
+						baseThird = Pitch.D5;
 						break;
 					}
 				case ChordName.vi:
 					{
-						baseFirst = Pitch.A;
-						baseSecond = Pitch.C1;
-						baseThird = Pitch.E1;
+						baseFirst = Pitch.A4;
+						baseSecond = Pitch.C5;
+						baseThird = Pitch.E5;
 						break;
 					}
 				case ChordName.vii:
 					{
-						baseFirst = Pitch.B;
-						baseSecond = Pitch.D1;
-						baseThird = Pitch.F1;
+						baseFirst = Pitch.B4;
+						baseSecond = Pitch.D5;
+						baseThird = Pitch.F5;
 						break;
 					}
 				case ChordName.Ihigh:
 					{
-						baseFirst = Pitch.C1;
-						baseSecond = Pitch.E1;
-						baseThird = Pitch.G1;
+						baseFirst = Pitch.C5;
+						baseSecond = Pitch.E5;
+						baseThird = Pitch.G5;
 						break;
 					}	
 			}

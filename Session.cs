@@ -34,7 +34,7 @@ namespace Cnthesizer
 			}
 
 			// initialize mixer with "silence" playing
-			Mixer = new MixingWaveProvider32(new List<WaveChannel32> { WavePlayers.Empty.Channel });
+			Mixer = new MixingWaveProvider32(new List<WaveChannel32> { PitchSelector.GetWavePlayer(Pitch.Empty).Channel });
 			CurrentlyPlaying[(int)Pitch.Empty] = true;
 
 			// initialize output
@@ -51,31 +51,31 @@ namespace Cnthesizer
 
 		public static Session CreateSession() => new Session();
 
-		public void StartPlayingFrequency(int frequencyIndex)
+		public void StartPlayingPitch(Pitch pitch)
 		{
 			// do nothing if no tone is added
-			if (frequencyIndex == (int)Pitch.Empty) return;
+			if (pitch == Pitch.Empty) return;
 
-			if (!CurrentlyPlaying[frequencyIndex])
+			if (!CurrentlyPlaying[(int)pitch])
 			{
 				UpdateRecorder();
 
-				WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
+				WavePlayer inputStream = PitchSelector.GetWavePlayer(pitch);
 				Mixer.AddInputStream(inputStream.Channel);
-				CurrentlyPlaying[frequencyIndex] = true;
+				CurrentlyPlaying[(int)pitch] = true;
 			}
 		}
 
-		public void StopPlayingFrequency(int frequencyIndex)
+		public void StopPlayingPitch(Pitch pitch)
 		{
 			UpdateRecorder();
 
 			// do nothing if no tone was released
-			if (frequencyIndex == (int)Pitch.Empty) return;
+			if (pitch == Pitch.Empty) return;
 
-			WavePlayer inputStream = WavePlayers.WavePlayerList[frequencyIndex];
+			WavePlayer inputStream = PitchSelector.GetWavePlayer(pitch);
 			Mixer.RemoveInputStream(inputStream.Channel);
-			CurrentlyPlaying[frequencyIndex] = false;
+			CurrentlyPlaying[(int)pitch] = false;
 		}
 
 		public void StartPlayingBeat(int bpm)
