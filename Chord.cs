@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace Cnthesizer
 {
-	struct Scale
+	public enum ChordName
+	{
+		ilow, ii, iii, iv, v, vi, vii, ihigh
+	}
+
+	class Scale
 	{
 		public bool Major;
 		public Pitch Base;
 		public Scale(bool major, Pitch baseTone)
 			=> (Major, Base) = (major, baseTone);
-	}
-
-	public enum ChordName
-	{
-		ilow, ii, iii, iv, v, vi, vii, ihigh
 	}
 
 	class Chord

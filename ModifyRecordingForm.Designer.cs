@@ -32,6 +32,9 @@
 			this.shiftSelectorComboBox = new System.Windows.Forms.ComboBox();
 			this.stopButton = new System.Windows.Forms.Button();
 			this.pitchShiftLabel = new System.Windows.Forms.Label();
+			this.manualHarmonyButton = new System.Windows.Forms.Button();
+			this.scaleSelector = new System.Windows.Forms.ComboBox();
+			this.majMinSelector = new System.Windows.Forms.ComboBox();
 			this.SuspendLayout();
 			// 
 			// playButton
@@ -73,11 +76,41 @@
 			this.pitchShiftLabel.TabIndex = 3;
 			this.pitchShiftLabel.Text = "Select pitch shift";
 			// 
+			// manualHarmonyButton
+			// 
+			this.manualHarmonyButton.Location = new System.Drawing.Point(40, 311);
+			this.manualHarmonyButton.Name = "manualHarmonyButton";
+			this.manualHarmonyButton.Size = new System.Drawing.Size(179, 64);
+			this.manualHarmonyButton.TabIndex = 4;
+			this.manualHarmonyButton.Text = "Add harmony";
+			this.manualHarmonyButton.UseVisualStyleBackColor = true;
+			// 
+			// scaleSelector
+			// 
+			this.scaleSelector.FormattingEnabled = true;
+			this.scaleSelector.Location = new System.Drawing.Point(476, 61);
+			this.scaleSelector.Name = "scaleSelector";
+			this.scaleSelector.Size = new System.Drawing.Size(128, 24);
+			this.scaleSelector.TabIndex = 5;
+			this.scaleSelector.SelectedIndexChanged += new System.EventHandler(this.scaleSelector_SelectedIndexChanged);
+			// 
+			// majMinSelector
+			// 
+			this.majMinSelector.FormattingEnabled = true;
+			this.majMinSelector.Location = new System.Drawing.Point(639, 60);
+			this.majMinSelector.Name = "majMinSelector";
+			this.majMinSelector.Size = new System.Drawing.Size(108, 24);
+			this.majMinSelector.TabIndex = 6;
+			this.majMinSelector.SelectedIndexChanged += new System.EventHandler(this.majMinSelector_SelectedIndexChanged);
+			// 
 			// ModifyRecordingForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.majMinSelector);
+			this.Controls.Add(this.scaleSelector);
+			this.Controls.Add(this.manualHarmonyButton);
 			this.Controls.Add(this.pitchShiftLabel);
 			this.Controls.Add(this.stopButton);
 			this.Controls.Add(this.shiftSelectorComboBox);
@@ -96,5 +129,8 @@
 		private System.Windows.Forms.ComboBox shiftSelectorComboBox;
 		private System.Windows.Forms.Button stopButton;
 		private System.Windows.Forms.Label pitchShiftLabel;
+		private System.Windows.Forms.Button manualHarmonyButton;
+		private System.Windows.Forms.ComboBox scaleSelector;
+		private System.Windows.Forms.ComboBox majMinSelector;
 	}
 }

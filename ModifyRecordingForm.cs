@@ -26,6 +26,11 @@ namespace Cnthesizer
 				"Minor third down", "Major third down", "Perfect fourth down", "Tritone down", "Perfect fifth down",
 				"Minor sixth down", "Major sixth down", "Minor seventh down", "Major seventh down", "Octave down"
 			});
+			this.majMinSelector.Items.AddRange(new string[] { "Minor", "Major", "N/A" });
+			this.scaleSelector.Items.AddRange(new string[]
+			{
+				"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
+			});
 		}
 
 		private void playButton_Click(object sender, EventArgs e)
@@ -48,6 +53,33 @@ namespace Cnthesizer
 		private void stopButton_Click(object sender, EventArgs e)
 		{
 			recorder.StopPlayback(false);
+		}
+
+		private void scaleSelector_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			UpdateScale();
+		}
+
+		private void majMinSelector_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			UpdateScale();
+		}
+
+		private void UpdateScale()
+		{
+			if ((string)scaleSelector.SelectedItem == "N/A" || (string)majMinSelector.SelectedItem == "N/A")
+				recorder.UpdateScale(null);
+
+			List<Pitch> scalePitches = new List<Pitch>
+			{
+				Pitch.C4, Pitch.Cm4, Pitch.D4, Pitch.Dm4, Pitch.E4, Pitch.F4, Pitch.Fm4,
+				Pitch.G4, Pitch.Gm4, Pitch.A4, Pitch.Am4, Pitch.B4
+			};
+
+			bool major = majMinSelector.SelectedIndex == 1;
+			Pitch baseTone = scalePitches[scaleSelector.SelectedIndex];
+
+			recorder.UpdateScale(new Scale(major, baseTone));
 		}
 	}
 }
