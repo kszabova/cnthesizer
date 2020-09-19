@@ -69,7 +69,7 @@ namespace Cnthesizer
 
 			List<Pitch> chord = new List<Pitch> { };
 			chord.Add(PitchSelector.ShiftPitchBySemitones(scale.Base, chordShifts[chordName].first));
-			chord.Add(PitchSelector.ShiftPitchBySemitones(scale.Base, chordShifts[chordName].third));
+			chord.Add(PitchSelector.ShiftPitchBySemitones(scale.Base, chordShifts[chordName].second));
 			chord.Add(PitchSelector.ShiftPitchBySemitones(scale.Base, chordShifts[chordName].third));
 			return chord;
 		}
