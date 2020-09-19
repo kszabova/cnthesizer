@@ -194,5 +194,7 @@ namespace Cnthesizer
 		public void StopPlayback(bool dispose) { }
 
 		public void RegenerateRecording(Shift shift) { }
+
+		public void UpdateScale(Scale scale) { }
 	}
 }
