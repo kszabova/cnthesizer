@@ -110,7 +110,25 @@ namespace Cnthesizer
 			// generate recorded wave
 			short[] wave = ConcatWaves(Shifts.Unison);
 			beatWave = GenerateBeat(bpm, wave.Length);
-			short[] combinedWave = Mixing.MixTwoWaves(wave, beatWave);
+			//short[] combinedWave = Mixing.MixTwoWaves(wave, beatWave);
+
+			Chord c1 = new Chord(new Scale(true, Pitch.C4), ChordName.ii);
+			Chord c2 = new Chord(new Scale(true, Pitch.C4), ChordName.v);
+			Chord c3 = new Chord(new Scale(true, Pitch.C4), ChordName.ilow);
+			List<Epoch> epochs = new List<Epoch> { };
+			epochs.Add(Epoch.CreateEpoch(1000, c1.Tones));
+			epochs.Add(Epoch.CreateEpoch(1000, c2.Tones));
+			epochs.Add(Epoch.CreateEpoch(1000, c3.Tones));
+			List<short[]> ws = new List<short[]> { };
+			foreach (Epoch epoch in epochs)
+			{
+				ws.Add(epoch.ConvertToWave(session.SAMPLE_RATE, Shifts.Unison));
+			}
+			short[] chord = ws.SelectMany(e => e).ToArray();
+			chord = chord.MultiplyToLength(wave.Length);
+			short[] combinedWave = Mixing.MixListOfWaves(new List<short[]> { wave, beatWave, chord });
+
+
 			byte[] binaryWave = Wave.ConvertShortWaveToBytes(combinedWave);
 
 			// save recording to file
