@@ -23,6 +23,8 @@ namespace Cnthesizer
 		void UpdateScale(Scale scale);
 		void AddHarmony();
 		void AddChord(ChordName chord, long duration);
+		void PlayChord(ChordName chord);
+		void StopChord();
 	}
 
 	class Recorder : IRecorder
@@ -34,8 +36,11 @@ namespace Cnthesizer
 		private List<Epoch> melodyEpochs { get; }
 		private Stopwatch stopwatch;
 		private long lastStopwatchMillis;
-		private WaveChannel32 recording;
-		private DirectSoundOut output;
+		private WaveChannel32 recordingChannel;
+		private DirectSoundOut recordingOutput;
+		private MixingWaveProvider32 harmonyProvider;
+		private DirectSoundOut harmonyOutput;
+		private Chord lastChord = null;
 		private int bpm;
 		private short[] beatWave;
 		private Scale scale;
@@ -77,29 +82,29 @@ namespace Cnthesizer
 
 		public void Playback()
 		{
-			recording.Seek(0, SeekOrigin.Begin);
-			output.Play();
+			recordingChannel.Seek(0, SeekOrigin.Begin);
+			recordingOutput.Play();
 		}
 
 		public void StopPlayback(bool dispose = false)
 		{
-			output.Stop();
+			recordingOutput.Stop();
 			if (dispose)
 			{
-				output.Dispose();
-				recording.Dispose();
+				recordingOutput.Dispose();
+				recordingChannel.Dispose();
 			}
 		}
 
 		public void RegenerateRecording(Shift shift)
 		{
-			if (output != null) output.Dispose();
-			if (output != null) recording.Dispose();
+			if (recordingOutput != null) recordingOutput.Dispose();
+			if (recordingOutput != null) recordingChannel.Dispose();
 
 			short[] melody = ConcatWaves(melodyEpochs, shift);
 			short[] harmony = ConcatWaves(harmonyEpochs, shift);
 			harmony = harmony.MultiplyToLength(melody.Length);
-			short[] beatWave = GenerateBeat(bpm, melody.Length);
+			if (beatWave == null) beatWave = GenerateBeat(bpm, melody.Length);
 			short[] combinedWave = Mixing.MixListOfWaves(new List<short[]> { melody, harmony, beatWave });
 			byte[] binaryWave = Wave.ConvertShortWaveToBytes(combinedWave);
 
@@ -109,9 +114,9 @@ namespace Cnthesizer
 					session.SAMPLE_RATE, session.BITS_PER_SAMPLE, session.CHANNELS);
 			}
 			
-			recording = new WaveChannel32(new WaveFileReader(Filename));
-			output = new DirectSoundOut();
-			output.Init(recording);
+			recordingChannel = new WaveChannel32(new WaveFileReader(Filename));
+			recordingOutput = new DirectSoundOut();
+			recordingOutput.Init(recordingChannel);
 		}
 
 		public void UpdateScale(Scale scale)
@@ -128,6 +133,12 @@ namespace Cnthesizer
 			}
 
 			ManualHarmonyForm harmonyForm = new ManualHarmonyForm(this);
+
+			harmonyProvider = new MixingWaveProvider32(new List<WaveChannel32> { PitchSelector.GetWavePlayer(Pitch.Empty).Channel });
+			harmonyOutput = new DirectSoundOut();
+			harmonyOutput.Init(harmonyProvider);
+			harmonyOutput.Play();
+
 			harmonyForm.ShowDialog();
 			RegenerateRecording(Shifts.Unison);
 		}
@@ -136,6 +147,28 @@ namespace Cnthesizer
 		{
 			Chord chord = new Chord(scale, chordName);
 			harmonyEpochs.Add(Epoch.CreateEpoch(duration, chord.Tones));
+		}
+
+		public void PlayChord(ChordName chordName)
+		{
+			Chord chord = new Chord(scale, chordName);
+			foreach (Pitch pitch in chord.Tones)
+			{
+				harmonyProvider.AddInputStream(PitchSelector.GetWavePlayer(pitch).Channel);
+			}
+			lastChord = chord;
+		}
+
+		public void StopChord()
+		{
+			if (lastChord != null)
+			{
+				foreach (Pitch pitch in lastChord.Tones)
+				{
+					harmonyProvider.RemoveInputStream(PitchSelector.GetWavePlayer(pitch).Channel);
+				}
+			}
+			lastChord = null;
 		}
 
 		private void SaveRecording()
@@ -207,5 +240,9 @@ namespace Cnthesizer
 		public void AddHarmony() { }
 
 		public void AddChord(ChordName chordName, long duration) { }
+
+		public void PlayChord(ChordName chordName) { }
+
+		public void StopChord() { }
 	}
 }

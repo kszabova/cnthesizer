@@ -47,8 +47,8 @@
 			this.ilow.TabIndex = 0;
 			this.ilow.Text = "I";
 			this.ilow.UseVisualStyleBackColor = true;
-			this.ilow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddEmptyChord);
-			this.ilow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ilow_MouseUp);
+			this.ilow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseDown);
+			this.ilow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseUp);
 			// 
 			// ii
 			// 
@@ -58,8 +58,8 @@
 			this.ii.TabIndex = 1;
 			this.ii.Text = "ii";
 			this.ii.UseVisualStyleBackColor = true;
-			this.ii.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddEmptyChord);
-			this.ii.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ii_MouseUp);
+			this.ii.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseDown);
+			this.ii.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseUp);
 			// 
 			// iii
 			// 
@@ -69,8 +69,8 @@
 			this.iii.TabIndex = 2;
 			this.iii.Text = "iii";
 			this.iii.UseVisualStyleBackColor = true;
-			this.iii.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddEmptyChord);
-			this.iii.MouseUp += new System.Windows.Forms.MouseEventHandler(this.iii_MouseUp);
+			this.iii.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseDown);
+			this.iii.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseUp);
 			// 
 			// iv
 			// 
@@ -80,8 +80,8 @@
 			this.iv.TabIndex = 3;
 			this.iv.Text = "IV";
 			this.iv.UseVisualStyleBackColor = true;
-			this.iv.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddEmptyChord);
-			this.iv.MouseUp += new System.Windows.Forms.MouseEventHandler(this.iv_MouseUp);
+			this.iv.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseDown);
+			this.iv.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseUp);
 			// 
 			// v
 			// 
@@ -91,8 +91,8 @@
 			this.v.TabIndex = 4;
 			this.v.Text = "V";
 			this.v.UseVisualStyleBackColor = true;
-			this.v.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddEmptyChord);
-			this.v.MouseUp += new System.Windows.Forms.MouseEventHandler(this.v_MouseUp);
+			this.v.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseDown);
+			this.v.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseUp);
 			// 
 			// vi
 			// 
@@ -102,8 +102,8 @@
 			this.vi.TabIndex = 5;
 			this.vi.Text = "vi";
 			this.vi.UseVisualStyleBackColor = true;
-			this.vi.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddEmptyChord);
-			this.vi.MouseUp += new System.Windows.Forms.MouseEventHandler(this.vi_MouseUp);
+			this.vi.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseDown);
+			this.vi.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseUp);
 			// 
 			// vii
 			// 
@@ -113,8 +113,8 @@
 			this.vii.TabIndex = 6;
 			this.vii.Text = "vii";
 			this.vii.UseVisualStyleBackColor = true;
-			this.vii.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddEmptyChord);
-			this.vii.MouseUp += new System.Windows.Forms.MouseEventHandler(this.vii_MouseUp);
+			this.vii.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseDown);
+			this.vii.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseUp);
 			// 
 			// ihigh
 			// 
@@ -124,8 +124,8 @@
 			this.ihigh.TabIndex = 7;
 			this.ihigh.Text = "I";
 			this.ihigh.UseVisualStyleBackColor = true;
-			this.ihigh.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddEmptyChord);
-			this.ihigh.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ihigh_MouseUp);
+			this.ihigh.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseDown);
+			this.ihigh.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ChordButtonMouseUp);
 			// 
 			// closeButton
 			// 

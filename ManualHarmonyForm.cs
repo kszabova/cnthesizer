@@ -26,23 +26,25 @@ namespace Cnthesizer
 			stopwatch.Start();
 		}
 
-		private void ilow_MouseUp(object sender, MouseEventArgs e) => AddChord(ChordName.ilow);
+		private void ChordButtonMouseDown(object sender, MouseEventArgs e)
+		{
+			recorder.StopChord();
+			ChordName chord = GetChordNameFromButton((Button)sender);
+			recorder.PlayChord(chord);
+			AddChord(ChordName.None);
+		}
 
-		private void ii_MouseUp(object sender, MouseEventArgs e) => AddChord(ChordName.ii);
+		private void ChordButtonMouseUp(object sender, MouseEventArgs e)
+		{
+			recorder.StopChord();
+			ChordName chord = GetChordNameFromButton((Button)sender);
+			AddChord(chord);
+		}
 
-		private void iii_MouseUp(object sender, MouseEventArgs e) => AddChord(ChordName.iii);
-
-		private void iv_MouseUp(object sender, MouseEventArgs e) => AddChord(ChordName.iv);
-
-		private void v_MouseUp(object sender, MouseEventArgs e) => AddChord(ChordName.v);
-
-		private void vi_MouseUp(object sender, MouseEventArgs e) => AddChord(ChordName.vi);
-
-		private void vii_MouseUp(object sender, MouseEventArgs e) => AddChord(ChordName.vii);
-
-		private void ihigh_MouseUp(object sender, MouseEventArgs e) => AddChord(ChordName.ihigh);
-
-		private void AddEmptyChord(object sender, MouseEventArgs e) => AddChord(ChordName.None);
+		private void closeButton_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
 
 		private void AddChord(ChordName chordName)
 		{
@@ -52,9 +54,20 @@ namespace Cnthesizer
 			lastElapsedMillis = elapsed;
 		}
 
-		private void closeButton_Click(object sender, EventArgs e)
+		private ChordName GetChordNameFromButton(Button button)
 		{
-			this.Close();
+			switch (button.Name)
+			{
+				case "ilow": return ChordName.ilow;
+				case "ii": return ChordName.ii;
+				case "iii": return ChordName.iii;
+				case "iv": return ChordName.iv;
+				case "v": return ChordName.v;
+				case "vi": return ChordName.vi;
+				case "vii": return ChordName.vii;
+				case "ihigh": return ChordName.ihigh;
+				default: throw new ApplicationException("Unrecognized button");
+			}
 		}
 	}
 }
