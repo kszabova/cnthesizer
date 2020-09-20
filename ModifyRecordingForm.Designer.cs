@@ -39,7 +39,9 @@
 			this.chordFreqTrackBar = new System.Windows.Forms.TrackBar();
 			this.automaticHarmonyButton = new System.Windows.Forms.Button();
 			this.chordFreqLabel = new System.Windows.Forms.Label();
-			this.showMessageCheckBox = new System.Windows.Forms.CheckBox();
+			this.showMessageHarmonyCheckBox = new System.Windows.Forms.CheckBox();
+			this.shiftRecordingByPitchButton = new System.Windows.Forms.Button();
+			this.showMessageShiftCheckBox = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.chordFreqTrackBar)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -61,7 +63,6 @@
 			this.shiftSelectorComboBox.Name = "shiftSelectorComboBox";
 			this.shiftSelectorComboBox.Size = new System.Drawing.Size(180, 24);
 			this.shiftSelectorComboBox.TabIndex = 1;
-			this.shiftSelectorComboBox.SelectedIndexChanged += new System.EventHandler(this.shiftSelectorComboBox_SelectedIndexChanged);
 			// 
 			// stopButton
 			// 
@@ -151,25 +152,50 @@
 			this.chordFreqLabel.TabIndex = 10;
 			this.chordFreqLabel.Text = "1";
 			// 
-			// showMessageCheckBox
+			// showMessageHarmonyCheckBox
 			// 
-			this.showMessageCheckBox.AutoSize = true;
-			this.showMessageCheckBox.Checked = true;
-			this.showMessageCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.showMessageCheckBox.Location = new System.Drawing.Point(534, 387);
-			this.showMessageCheckBox.Name = "showMessageCheckBox";
-			this.showMessageCheckBox.Size = new System.Drawing.Size(198, 21);
-			this.showMessageCheckBox.TabIndex = 11;
-			this.showMessageCheckBox.Text = "Show message when done";
-			this.showMessageCheckBox.UseVisualStyleBackColor = true;
-			this.showMessageCheckBox.CheckedChanged += new System.EventHandler(this.showMessageCheckBox_CheckedChanged);
+			this.showMessageHarmonyCheckBox.AutoSize = true;
+			this.showMessageHarmonyCheckBox.Checked = true;
+			this.showMessageHarmonyCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.showMessageHarmonyCheckBox.Location = new System.Drawing.Point(534, 387);
+			this.showMessageHarmonyCheckBox.Name = "showMessageHarmonyCheckBox";
+			this.showMessageHarmonyCheckBox.Size = new System.Drawing.Size(198, 21);
+			this.showMessageHarmonyCheckBox.TabIndex = 11;
+			this.showMessageHarmonyCheckBox.Text = "Show message when done";
+			this.showMessageHarmonyCheckBox.UseVisualStyleBackColor = true;
+			this.showMessageHarmonyCheckBox.CheckedChanged += new System.EventHandler(this.showMessageCheckBox_CheckedChanged);
+			// 
+			// shiftRecordingByPitchButton
+			// 
+			this.shiftRecordingByPitchButton.Location = new System.Drawing.Point(245, 198);
+			this.shiftRecordingByPitchButton.Name = "shiftRecordingByPitchButton";
+			this.shiftRecordingByPitchButton.Size = new System.Drawing.Size(147, 51);
+			this.shiftRecordingByPitchButton.TabIndex = 12;
+			this.shiftRecordingByPitchButton.Text = "Shift";
+			this.shiftRecordingByPitchButton.UseVisualStyleBackColor = true;
+			this.shiftRecordingByPitchButton.Click += new System.EventHandler(this.shiftRecordingByPitchButton_Click);
+			// 
+			// showMessageShiftCheckBox
+			// 
+			this.showMessageShiftCheckBox.AutoSize = true;
+			this.showMessageShiftCheckBox.Checked = true;
+			this.showMessageShiftCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.showMessageShiftCheckBox.Location = new System.Drawing.Point(247, 263);
+			this.showMessageShiftCheckBox.Name = "showMessageShiftCheckBox";
+			this.showMessageShiftCheckBox.Size = new System.Drawing.Size(198, 21);
+			this.showMessageShiftCheckBox.TabIndex = 13;
+			this.showMessageShiftCheckBox.Text = "Show message when done";
+			this.showMessageShiftCheckBox.UseVisualStyleBackColor = true;
+			this.showMessageShiftCheckBox.CheckedChanged += new System.EventHandler(this.showMessageShiftCheckBox_CheckedChanged);
 			// 
 			// ModifyRecordingForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
-			this.Controls.Add(this.showMessageCheckBox);
+			this.Controls.Add(this.showMessageShiftCheckBox);
+			this.Controls.Add(this.shiftRecordingByPitchButton);
+			this.Controls.Add(this.showMessageHarmonyCheckBox);
 			this.Controls.Add(this.chordFreqLabel);
 			this.Controls.Add(this.automaticHarmonyButton);
 			this.Controls.Add(this.chordFreqTrackBar);
@@ -203,6 +229,8 @@
 		private System.Windows.Forms.TrackBar chordFreqTrackBar;
 		private System.Windows.Forms.Button automaticHarmonyButton;
 		private System.Windows.Forms.Label chordFreqLabel;
-		private System.Windows.Forms.CheckBox showMessageCheckBox;
+		private System.Windows.Forms.CheckBox showMessageHarmonyCheckBox;
+		private System.Windows.Forms.Button shiftRecordingByPitchButton;
+		private System.Windows.Forms.CheckBox showMessageShiftCheckBox;
 	}
 }

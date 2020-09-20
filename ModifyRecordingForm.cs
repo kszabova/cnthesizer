@@ -15,6 +15,7 @@ namespace Cnthesizer
 		private IRecorder recorder;
 		private int bpm;
 		private bool showMessageWhenHarmonyGenerated = true;
+		private bool showMessageWhenPitchChanged = true;
 
 		public ModifyRecordingForm(IRecorder recorder, int bpm)
 		{
@@ -48,13 +49,6 @@ namespace Cnthesizer
 		private void ModifyRecordingForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			recorder.StopPlayback(true);
-		}
-
-		private void shiftSelectorComboBox_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			recorder.StopPlayback(false);
-			Shift shift = Shifts.shifts[shiftSelectorComboBox.SelectedIndex];
-			recorder.RegenerateRecording(shift);
 		}
 
 		private void stopButton_Click(object sender, EventArgs e)
@@ -173,7 +167,7 @@ namespace Cnthesizer
 				recorder.AddChord(chord, oneChordDuration);
 			}
 
-			recorder.RegenerateRecording(Shifts.Unison);
+			recorder.RegenerateRecording();
 
 			if (showMessageWhenHarmonyGenerated)
 				MessageBox.Show("Done! Hear the result by clicking Play.");
@@ -186,7 +180,18 @@ namespace Cnthesizer
 
 		private void showMessageCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			showMessageWhenHarmonyGenerated = showMessageCheckBox.Checked;
+			showMessageWhenHarmonyGenerated = showMessageHarmonyCheckBox.Checked;
+		}
+
+		private void shiftRecordingByPitchButton_Click(object sender, EventArgs e)
+		{
+			recorder.StopPlayback(false);
+			Shift shift = Shifts.shifts[shiftSelectorComboBox.SelectedIndex];
+			recorder.Shift = shift;
+			recorder.RegenerateRecording();
+
+			if (showMessageWhenPitchChanged)
+				MessageBox.Show("Done! Hear the result by clicking Play.");
 		}
 
 		private void UpdateScale()
@@ -208,6 +213,11 @@ namespace Cnthesizer
 			Pitch baseTone = scalePitches[scaleSelector.SelectedIndex];
 
 			recorder.UpdateScale(new Scale(major, baseTone));
+		}
+
+		private void showMessageShiftCheckBox_CheckedChanged(object sender, EventArgs e)
+		{
+			showMessageWhenPitchChanged = showMessageShiftCheckBox.Checked;
 		}
 	}
 }

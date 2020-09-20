@@ -14,12 +14,13 @@ namespace Cnthesizer
 	{
 		bool IsActive { get; }
 		string Filename { get; set; }
+		Shift Shift { get; set; }
 		void StartRecording();
 		void StopRecording();
 		void AddNewEpoch(List<Pitch> frequencies);
 		void Playback();
 		void StopPlayback(bool dispose);
-		void RegenerateRecording(Shift shift);
+		void RegenerateRecording();
 		void UpdateScale(Scale scale);
 		void AddHarmony(bool manual);
 		void AddChord(ChordName chord, long duration);
@@ -45,6 +46,7 @@ namespace Cnthesizer
 		private short[] beatWave;
 		private Scale scale;
 		private List<Epoch> harmonyEpochs { get; set; }
+		public Shift Shift { get; set; }
 
 		private Recorder(Session session)
 		{
@@ -55,6 +57,7 @@ namespace Cnthesizer
 			harmonyEpochs = new List<Epoch> { };
 			stopwatch = new Stopwatch();
 			lastStopwatchMillis = 0;
+			Shift = Shifts.Unison;
 		}
 
 		public static Recorder CreateRecording(Session session) => new Recorder(session);
@@ -96,15 +99,15 @@ namespace Cnthesizer
 			}
 		}
 
-		public void RegenerateRecording(Shift shift)
+		public void RegenerateRecording()
 		{
 			// dispose recording channel and recording output if they exist
 			if (recordingOutput != null) recordingOutput.Dispose();
 			if (recordingChannel != null) recordingChannel.Dispose();
 
 			// generate waves from epochs
-			short[] melody = ConcatWaves(melodyEpochs, shift);
-			short[] harmony = ConcatWaves(harmonyEpochs, shift);
+			short[] melody = ConcatWaves(melodyEpochs);
+			short[] harmony = ConcatWaves(harmonyEpochs);
 			harmony = harmony.MultiplyToLength(melody.Length);
 			if (beatWave == null)
 				beatWave = GenerateBeat(bpm, melody.Length);
@@ -141,7 +144,7 @@ namespace Cnthesizer
 
 			// remove previously added harmony
 			harmonyEpochs = new List<Epoch> { };
-			RegenerateRecording(Shifts.Unison);
+			RegenerateRecording();
 
 			if (manual)
 			{
@@ -156,7 +159,7 @@ namespace Cnthesizer
 				harmonyOutput.Play();
 
 				harmonyForm.ShowDialog();
-				RegenerateRecording(Shifts.Unison);
+				RegenerateRecording();
 			}
 		}
 
@@ -194,7 +197,7 @@ namespace Cnthesizer
 			SaveRecordingForm saveRecording = new SaveRecordingForm(this);
 			saveRecording.ShowDialog();
 
-			RegenerateRecording(Shifts.Unison);
+			RegenerateRecording();
 		}
 
 		private void ModifyRecording()
@@ -203,12 +206,12 @@ namespace Cnthesizer
 			modifyRecording.ShowDialog();
 		}
 
-		private short[] ConcatWaves(List<Epoch> waves, Shift shift)
+		private short[] ConcatWaves(List<Epoch> waves)
 		{
 			List<short[]> shortWaves = new List<short[]> { };
 			foreach (Epoch epoch in waves)
 			{
-				shortWaves.Add(epoch.ConvertToWave(session.SAMPLE_RATE, shift, session.WaveForm));
+				shortWaves.Add(epoch.ConvertToWave(session.SAMPLE_RATE, Shift, session.WaveForm));
 			}
 			short[] wave = shortWaves.SelectMany(w => w).ToArray();
 			return wave;
@@ -238,6 +241,8 @@ namespace Cnthesizer
 			set { }
 		}
 
+		public Shift Shift { get; set; }
+
 		public static RecorderPlaceholder Instance = new RecorderPlaceholder();
 
 		static RecorderPlaceholder() { }
@@ -254,7 +259,7 @@ namespace Cnthesizer
 
 		public void StopPlayback(bool dispose) { }
 
-		public void RegenerateRecording(Shift shift) { }
+		public void RegenerateRecording() { }
 
 		public void UpdateScale(Scale scale) { }
 
