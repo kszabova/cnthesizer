@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Cnthesizer
 {
 	partial class ManualHarmonyForm : Form
 	{
+		private long lastElapsedMillis = 0;
 		private IRecorder recorder;
 		private Stopwatch stopwatch;
-		private long lastElapsedMillis = 0;
-
 		public ManualHarmonyForm(IRecorder recorder)
 		{
 			this.recorder = recorder;
@@ -26,32 +18,17 @@ namespace Cnthesizer
 			stopwatch.Start();
 		}
 
-		private void ChordButtonMouseDown(object sender, MouseEventArgs e)
-		{
-			recorder.StopChord();
-			ChordName chord = GetChordNameFromButton((Button)sender);
-			recorder.PlayChord(chord);
-			AddChord(ChordName.None);
-		}
-
-		private void ChordButtonMouseUp(object sender, MouseEventArgs e)
-		{
-			recorder.StopChord();
-			ChordName chord = GetChordNameFromButton((Button)sender);
-			AddChord(chord);
-		}
-
-		private void closeButton_Click(object sender, EventArgs e)
-		{
-			this.Close();
-		}
-
 		private void AddChord(ChordName chordName)
 		{
 			long elapsed = stopwatch.ElapsedMilliseconds;
 			long duration = elapsed - lastElapsedMillis;
 			lastElapsedMillis = elapsed;
 			recorder.AddChord(chordName, duration);
+		}
+
+		private void closeButton_Click(object sender, EventArgs e)
+		{
+			this.Close();
 		}
 
 		private ChordName GetChordNameFromButton(Button button)
@@ -68,6 +45,21 @@ namespace Cnthesizer
 				case "ihigh": return ChordName.ihigh;
 				default: throw new ApplicationException("Unrecognized button");
 			}
+		}
+
+		private void ChordButtonMouseDown(object sender, MouseEventArgs e)
+		{
+			recorder.StopChord();
+			ChordName chord = GetChordNameFromButton((Button)sender);
+			recorder.PlayChord(chord);
+			AddChord(ChordName.None);
+		}
+
+		private void ChordButtonMouseUp(object sender, MouseEventArgs e)
+		{
+			recorder.StopChord();
+			ChordName chord = GetChordNameFromButton((Button)sender);
+			AddChord(chord);
 		}
 	}
 }

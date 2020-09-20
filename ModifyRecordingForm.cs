@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Cnthesizer
 {
 	partial class ModifyRecordingForm : Form
 	{
-		private IRecorder recorder;
 		private int bpm;
+		private IRecorder recorder;
 		private bool showMessageWhenHarmonyGenerated = true;
 		private bool showMessageWhenPitchChanged = true;
 
@@ -39,44 +33,6 @@ namespace Cnthesizer
 			{
 				"ii - v - i", "i - iv - v", "i - v - vi - iv", "i - vi - iv - v", "i - v - i - iv", "vi - v - iv - iii", "N/A"
 			});
-		}
-
-		private void playButton_Click(object sender, EventArgs e)
-		{
-			recorder.Playback();
-		}
-
-		private void ModifyRecordingForm_FormClosed(object sender, FormClosedEventArgs e)
-		{
-			recorder.StopPlayback(true);
-		}
-
-		private void stopButton_Click(object sender, EventArgs e)
-		{
-			recorder.StopPlayback(false);
-		}
-
-		private void scaleSelector_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			UpdateScale();
-		}
-
-		private void majMinSelector_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			UpdateScale();
-		}
-
-		private void manualHarmonyButton_Click(object sender, EventArgs e)
-		{
-			try
-			{
-				recorder.AddHarmony(true);
-			}
-			catch (ApplicationException)
-			{
-				MessageBox.Show("You must select a scale first!");
-				return;
-			}
 		}
 
 		private void automaticHarmonyButton_Click(object sender, EventArgs e)
@@ -161,7 +117,7 @@ namespace Cnthesizer
 
 			int chordFrequency = bpm / chordFreqTrackBar.Value;
 			int oneChordDuration = Convert.ToInt32(1 / ((float)chordFrequency / 60) * 1000);
-			
+
 			foreach (ChordName chord in chords)
 			{
 				recorder.AddChord(chord, oneChordDuration);
@@ -178,9 +134,36 @@ namespace Cnthesizer
 			chordFreqLabel.Text = chordFreqTrackBar.Value.ToString();
 		}
 
-		private void showMessageCheckBox_CheckedChanged(object sender, EventArgs e)
+		private void majMinSelector_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			showMessageWhenHarmonyGenerated = showMessageHarmonyCheckBox.Checked;
+			UpdateScale();
+		}
+
+		private void manualHarmonyButton_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				recorder.AddHarmony(true);
+			}
+			catch (ApplicationException)
+			{
+				MessageBox.Show("You must select a scale first!");
+				return;
+			}
+		}
+
+		private void ModifyRecordingForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			recorder.StopPlayback(true);
+		}
+
+		private void playButton_Click(object sender, EventArgs e)
+		{
+			recorder.Playback();
+		}
+		private void scaleSelector_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			UpdateScale();
 		}
 
 		private void shiftRecordingByPitchButton_Click(object sender, EventArgs e)
@@ -194,6 +177,20 @@ namespace Cnthesizer
 				MessageBox.Show("Done! Hear the result by clicking Play.");
 		}
 
+		private void showMessageCheckBox_CheckedChanged(object sender, EventArgs e)
+		{
+			showMessageWhenHarmonyGenerated = showMessageHarmonyCheckBox.Checked;
+		}
+
+		private void showMessageShiftCheckBox_CheckedChanged(object sender, EventArgs e)
+		{
+			showMessageWhenPitchChanged = showMessageShiftCheckBox.Checked;
+		}
+
+		private void stopButton_Click(object sender, EventArgs e)
+		{
+			recorder.StopPlayback(false);
+		}
 		private void UpdateScale()
 		{
 			if ((string)scaleSelector.SelectedItem == "N/A" || (string)majMinSelector.SelectedItem == "N/A"
@@ -213,11 +210,6 @@ namespace Cnthesizer
 			Pitch baseTone = scalePitches[scaleSelector.SelectedIndex];
 
 			recorder.UpdateScale(new Scale(major, baseTone));
-		}
-
-		private void showMessageShiftCheckBox_CheckedChanged(object sender, EventArgs e)
-		{
-			showMessageWhenPitchChanged = showMessageShiftCheckBox.Checked;
 		}
 	}
 }

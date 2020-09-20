@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Cnthesizer
 {
-	class Epoch
+	internal class Epoch
 	{
-		private long Duration { get; }
-		private List<Pitch> Frequencies { get; }
-		
 		private Epoch(long duration, List<Pitch> frequencies)
 		{
 			Duration = duration;
 			Frequencies = frequencies;
 		}
 
+		private long Duration { get; }
+		private List<Pitch> Frequencies { get; }
+
 		public static Epoch CreateEpoch(long duration, List<Pitch> frequencies)
 			=> new Epoch(duration, frequencies);
 
-		internal short[] ConvertToWave(int sampleRate, Shift shift, WaveFormEquation waveForm)
+		public short[] ConvertToWave(int sampleRate, Shift shift, WaveFormEquation waveForm)
 		{
 			int length = ConvertDurationToLength(sampleRate);
 			List<short[]> waves = new List<short[]> { };

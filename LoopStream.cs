@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using NAudio.Wave;
+﻿using NAudio.Wave;
 
 namespace Cnthesizer
 {
 	public class LoopStream : WaveStream
 	{
-		WaveStream sourceStream;
+		private WaveStream sourceStream;
 
 		/// <summary>
 		/// Creates a new Loop stream
@@ -78,10 +72,10 @@ namespace Cnthesizer
 
 	public class WavePlayer
 	{
-		WaveFileReader Reader;
+		private WaveFileReader Reader;
 		public WaveChannel32 Channel { get; set; }
 
-		string FileName { get; set; }
+		private string FileName { get; set; }
 
 		public WavePlayer(string FileName)
 		{
@@ -99,6 +93,5 @@ namespace Cnthesizer
 				Reader.Dispose();
 			}
 		}
-
 	}
 }

@@ -1,40 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cnthesizer
 {
 	public delegate short[] WaveFormEquation(double frequency, int length, int sampleRate);
 
-	static class WaveForms
+	internal static class WaveForms
 	{
 		public static short[] ConstantZero(double frequency, int length, int sampleRate)
 		{
 			short[] wave = new short[length];
-			return wave;
-		}
-
-		public static short[] SineWave(double frequency, int length, int sampleRate)
-		{
-			short[] wave = new short[length];
-			for (int i = 0; i < length; i++)
-			{
-				// value at point i is amplitude * sin(angular frequency * i)
-				wave[i] = Convert.ToInt16(short.MaxValue * Math.Sin(Math.PI * 2 * frequency / sampleRate * i));
-			}
-			return wave;
-		}
-
-		public static short[] SquareWave(double frequency, int length, int sampleRate)
-		{
-			short[] wave = new short[length];
-			for (int i = 0; i < length; i++)
-			{
-				// value at point i is amplitude * sgn(sin(angular frequency * i))
-				wave[i] = Convert.ToInt16(short.MaxValue * Math.Sign(Math.Sin(Math.PI * 2 * frequency / sampleRate * i)));
-			}
 			return wave;
 		}
 
@@ -62,6 +36,28 @@ namespace Cnthesizer
 
 					totalSamplesWritten++;
 				}
+			}
+			return wave;
+		}
+
+		public static short[] SineWave(double frequency, int length, int sampleRate)
+		{
+			short[] wave = new short[length];
+			for (int i = 0; i < length; i++)
+			{
+				// value at point i is amplitude * sin(angular frequency * i)
+				wave[i] = Convert.ToInt16(short.MaxValue * Math.Sin(Math.PI * 2 * frequency / sampleRate * i));
+			}
+			return wave;
+		}
+
+		public static short[] SquareWave(double frequency, int length, int sampleRate)
+		{
+			short[] wave = new short[length];
+			for (int i = 0; i < length; i++)
+			{
+				// value at point i is amplitude * sgn(sin(angular frequency * i))
+				wave[i] = Convert.ToInt16(short.MaxValue * Math.Sign(Math.Sin(Math.PI * 2 * frequency / sampleRate * i)));
 			}
 			return wave;
 		}

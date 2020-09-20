@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Cnthesizer
@@ -20,8 +13,6 @@ namespace Cnthesizer
 			InitializeComponent();
 		}
 
-		private void saveFilenameButton_Click(object sender, EventArgs e) => SaveFilename();
-
 		private void filenameTextBox_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			if (e.KeyChar == (char)Keys.Return) SaveFilename();
@@ -33,5 +24,7 @@ namespace Cnthesizer
 			if (filename.Length > 0) recorder.Filename = filename;
 			Close();
 		}
+
+		private void saveFilenameButton_Click(object sender, EventArgs e) => SaveFilename();
 	}
 }

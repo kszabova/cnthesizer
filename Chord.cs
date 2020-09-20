@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Cnthesizer
 {
@@ -11,22 +7,11 @@ namespace Cnthesizer
 		ilow, ii, iii, iv, v, vi, vii, ihigh, None
 	}
 
-	public class Scale
-	{
-		public bool Major;
-		public Pitch Base;
-		public Scale(bool major, Pitch baseTone)
-			=> (Major, Base) = (major, baseTone);
-	}
-
 	public class Chord
 	{
-		struct ChordShiftFromBase
-		{
-			public int first, second, third;
-			public ChordShiftFromBase(int first, int second, int third)
-				=> (this.first, this.second, this.third) = (first, second, third);
-		}
+		private readonly ChordName chordName;
+
+		private readonly Scale scale;
 
 		private Dictionary<ChordName, ChordShiftFromBase> MajChordShifts = new Dictionary<ChordName, ChordShiftFromBase>
 		{
@@ -52,16 +37,14 @@ namespace Cnthesizer
 			{ChordName.ihigh, new ChordShiftFromBase(12, 15, 19) }
 		};
 
-		public List<Pitch> Tones { get; }
-		private readonly Scale scale;
-		private readonly ChordName chordName;
-
 		public Chord(Scale scale, ChordName chordName)
 		{
 			this.scale = scale;
 			this.chordName = chordName;
 			Tones = GetChord();
 		}
+
+		public List<Pitch> Tones { get; }
 
 		public List<Pitch> GetChord()
 		{
@@ -75,5 +58,22 @@ namespace Cnthesizer
 			chord.Add(PitchSelector.ShiftPitchBySemitones(scale.Base, chordShifts[chordName].third));
 			return chord;
 		}
+
+		private struct ChordShiftFromBase
+		{
+			public int first, second, third;
+
+			public ChordShiftFromBase(int first, int second, int third)
+				=> (this.first, this.second, this.third) = (first, second, third);
+		}
+	}
+
+	public class Scale
+	{
+		public Pitch Base;
+		public bool Major;
+
+		public Scale(bool major, Pitch baseTone)
+			=> (Major, Base) = (major, baseTone);
 	}
 }

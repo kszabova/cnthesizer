@@ -1,32 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Cnthesizer
 {
-	class Mixing
+	internal class Mixing
 	{
-		public static short[] MixTwoWaves(short[] a, short[] b)
-		{
-			short[] shorter = a.Length < b.Length ? a : b;
-			short[] longer = a.Length < b.Length ? b : a;
-
-			short[] mixed = new short[longer.Length];
-			for (int i = 0; i < shorter.Length; i++)
-			{
-				mixed[i] = (short)((shorter[i] + longer[i]) / 2);
-			}
-
-			for (int i = shorter.Length; i < longer.Length; i++)
-			{
-				mixed[i] = longer[i];
-			}
-
-			return mixed;
-		}
-
 		public static short[] MixListOfWaves(List<short[]> waves)
 		{
 			if (waves.Count == 0) return new short[] { };
@@ -59,6 +36,25 @@ namespace Cnthesizer
 			}
 
 			return mixedWave;
+		}
+
+		public static short[] MixTwoWaves(short[] a, short[] b)
+		{
+			short[] shorter = a.Length < b.Length ? a : b;
+			short[] longer = a.Length < b.Length ? b : a;
+
+			short[] mixed = new short[longer.Length];
+			for (int i = 0; i < shorter.Length; i++)
+			{
+				mixed[i] = (short)((shorter[i] + longer[i]) / 2);
+			}
+
+			for (int i = shorter.Length; i < longer.Length; i++)
+			{
+				mixed[i] = longer[i];
+			}
+
+			return mixed;
 		}
 	}
 }

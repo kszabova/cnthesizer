@@ -1,14 +1,9 @@
 ﻿using NAudio.Wave;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Cnthesizer
 {
-	static class KeyControls
+	internal static class KeyControls
 	{
 		public static Pitch GetPitchFromKey(Keys key)
 		{
@@ -58,6 +53,7 @@ namespace Cnthesizer
 
 		public static WavePlayer GetWavePlayerFromKey(Keys key, WaveFormEquation waveForm)
 			=> PitchSelector.GetWavePlayer(GetPitchFromKey(key), waveForm);
+
 		public static WaveFileReader GetWaveFileReaderFromKey(Keys key, WaveFormEquation waveForm)
 			=> PitchSelector.GetWaveFileReader(GetPitchFromKey(key), waveForm);
 	}

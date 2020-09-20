@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cnthesizer
 {
@@ -73,12 +70,25 @@ namespace Cnthesizer
 	{
 		public static readonly List<double> Frequencies;
 
-		private static readonly List<WaveFileReader> SineWaveFileReaders = new List<WaveFileReader> { };
-		private static readonly List<WaveFileReader> SquareWaveFileReaders = new List<WaveFileReader> { };
 		private static readonly List<WaveFileReader> SawtoothWaveFileReaders = new List<WaveFileReader> { };
-		private static readonly List<WavePlayer> SineWavePlayers = new List<WavePlayer> { };
-		private static readonly List<WavePlayer> SquareWavePlayers = new List<WavePlayer> { };
 		private static readonly List<WavePlayer> SawtoothWavePlayers = new List<WavePlayer> { };
+		private static readonly List<WaveFileReader> SineWaveFileReaders = new List<WaveFileReader> { };
+		private static readonly List<WavePlayer> SineWavePlayers = new List<WavePlayer> { };
+		private static readonly List<WaveFileReader> SquareWaveFileReaders = new List<WaveFileReader> { };
+		private static readonly List<WavePlayer> SquareWavePlayers = new List<WavePlayer> { };
+
+		private static List<(string, WaveFormEquation)> prefixFormPairs = new List<(string, WaveFormEquation)>
+		{
+			(sinePrefix, WaveForms.SineWave),
+			(squarePrefix, WaveForms.SquareWave),
+			(sawtoothPrefix, WaveForms.SawtoothWave)
+		};
+
+		private static string sawtoothPrefix = "saw_";
+
+		private static string sinePrefix = "sine_";
+
+		private static string squarePrefix = "square_";
 
 		private static List<string> waveFileNames = new List<string>
 		{
@@ -87,16 +97,6 @@ namespace Cnthesizer
 			"a4.wav", "am4.wav", "b4.wav", "c5.wav", "cm5.wav", "d5.wav", "dm5.wav", "e5.wav", "f5.wav", "fm5.wav", "g5.wav", "gm5.wav",
 			"a5.wav", "am5.wav", "b5.wav", "c6.wav", "cm6.wav", "d6.wav", "dm6.wav", "e6.wav", "f6.wav", "fm6.wav", "g6.wav", "gm6.wav",
 			"a6.wav"
-		};
-		private static string sinePrefix = "sine_";
-		private static string squarePrefix = "square_";
-		private static string sawtoothPrefix = "saw_";
-
-		private static List<(string, WaveFormEquation)> prefixFormPairs = new List<(string, WaveFormEquation)>
-		{
-			(sinePrefix, WaveForms.SineWave),
-			(squarePrefix, WaveForms.SquareWave),
-			(sawtoothPrefix, WaveForms.SawtoothWave)
 		};
 
 		static PitchSelector()
@@ -123,6 +123,11 @@ namespace Cnthesizer
 			}
 		}
 
+		public static IEnumerable<Pitch> EnumeratePitches()
+		{
+			foreach (Pitch pitch in Enum.GetValues(typeof(Pitch))) yield return pitch;
+		}
+
 		public static string GetWaveFilename(Pitch pitch) => waveFileNames[(int)pitch];
 
 		public static WaveFileReader GetWaveFileReader(Pitch pitch, WaveFormEquation waveForm)
@@ -139,11 +144,6 @@ namespace Cnthesizer
 			int index = waveFileNames.IndexOf(filename);
 			var wavePlayer = GetPlayerByWaveForm(waveForm);
 			return wavePlayer[index];
-		}
-
-		public static IEnumerable<Pitch> EnumeratePitches()
-		{
-			foreach (Pitch pitch in Enum.GetValues(typeof(Pitch))) yield return pitch;
 		}
 
 		public static Pitch ShiftPitchBySemitones(Pitch pitch, int semitones)
