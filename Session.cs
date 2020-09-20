@@ -34,6 +34,7 @@ namespace Cnthesizer
 
 			// initialize recording to placeholder instance
 			recorder = RecorderPlaceholder.Instance;
+			IsRecording = false;
 		}
 
 		public WavePlayer Beat { get; private set; }
@@ -42,6 +43,7 @@ namespace Cnthesizer
 		public int CurrentBpm { get; private set; }
 		public bool[] CurrentlyPlaying { get; }
 		public short CHANNELS => 1;
+		public bool IsRecording { get; private set; }
 		public MixingWaveProvider32 Mixer { get; }
 		public DirectSoundOut Output { get; }
 		public int SAMPLE_RATE => 44100;
@@ -90,6 +92,7 @@ namespace Cnthesizer
 		{
 			if (recorder.IsActive) return;
 
+			IsRecording = true;
 			recorder = Recorder.CreateRecording(this);
 			// reset beat
 			if (Beat != null) Beat.Channel.Seek(0, SeekOrigin.Begin);
@@ -127,6 +130,7 @@ namespace Cnthesizer
 		{
 			if (!recorder.IsActive) return;
 
+			IsRecording = false;
 			StopPlayingBeat();
 			UpdateRecorder();
 			recorder.StopRecording();

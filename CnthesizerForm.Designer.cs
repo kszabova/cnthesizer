@@ -31,8 +31,7 @@
 			this.bpmSlider = new System.Windows.Forms.TrackBar();
 			this.beatButton = new System.Windows.Forms.Button();
 			this.bpmValueTextBox = new System.Windows.Forms.TextBox();
-			this.startRecordingBtn = new System.Windows.Forms.Button();
-			this.stopRecordingBtn = new System.Windows.Forms.Button();
+			this.recordingButton = new System.Windows.Forms.Button();
 			this.sineButton = new System.Windows.Forms.Button();
 			this.squareButton = new System.Windows.Forms.Button();
 			this.sawtoothButton = new System.Windows.Forms.Button();
@@ -69,25 +68,15 @@
 			this.bpmValueTextBox.TabIndex = 2;
 			this.bpmValueTextBox.Text = "60";
 			// 
-			// startRecordingBtn
+			// recordingButton
 			// 
-			this.startRecordingBtn.Location = new System.Drawing.Point(40, 196);
-			this.startRecordingBtn.Name = "startRecordingBtn";
-			this.startRecordingBtn.Size = new System.Drawing.Size(196, 81);
-			this.startRecordingBtn.TabIndex = 3;
-			this.startRecordingBtn.Text = "Start recording";
-			this.startRecordingBtn.UseVisualStyleBackColor = true;
-			this.startRecordingBtn.Click += new System.EventHandler(this.startRecordingBtn_Click);
-			// 
-			// stopRecordingBtn
-			// 
-			this.stopRecordingBtn.Location = new System.Drawing.Point(296, 196);
-			this.stopRecordingBtn.Name = "stopRecordingBtn";
-			this.stopRecordingBtn.Size = new System.Drawing.Size(196, 81);
-			this.stopRecordingBtn.TabIndex = 4;
-			this.stopRecordingBtn.Text = "Stop recording";
-			this.stopRecordingBtn.UseVisualStyleBackColor = true;
-			this.stopRecordingBtn.Click += new System.EventHandler(this.stopRecordingBtn_Click);
+			this.recordingButton.Location = new System.Drawing.Point(40, 196);
+			this.recordingButton.Name = "recordingButton";
+			this.recordingButton.Size = new System.Drawing.Size(196, 81);
+			this.recordingButton.TabIndex = 3;
+			this.recordingButton.Text = "Start recording";
+			this.recordingButton.UseVisualStyleBackColor = true;
+			this.recordingButton.Click += new System.EventHandler(this.recordingButton_Click);
 			// 
 			// sineButton
 			// 
@@ -127,8 +116,7 @@
 			this.Controls.Add(this.sawtoothButton);
 			this.Controls.Add(this.squareButton);
 			this.Controls.Add(this.sineButton);
-			this.Controls.Add(this.stopRecordingBtn);
-			this.Controls.Add(this.startRecordingBtn);
+			this.Controls.Add(this.recordingButton);
 			this.Controls.Add(this.bpmValueTextBox);
 			this.Controls.Add(this.beatButton);
 			this.Controls.Add(this.bpmSlider);
@@ -150,8 +138,7 @@
 		private System.Windows.Forms.TrackBar bpmSlider;
 		private System.Windows.Forms.Button beatButton;
 		private System.Windows.Forms.TextBox bpmValueTextBox;
-		private System.Windows.Forms.Button startRecordingBtn;
-		private System.Windows.Forms.Button stopRecordingBtn;
+		private System.Windows.Forms.Button recordingButton;
 		private System.Windows.Forms.Button sineButton;
 		private System.Windows.Forms.Button squareButton;
 		private System.Windows.Forms.Button sawtoothButton;

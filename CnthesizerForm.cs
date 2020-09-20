@@ -12,23 +12,6 @@ namespace Cnthesizer
 			InitializeComponent();
 		}
 
-		private void CnthesizerForm_KeyDown(object sender, KeyEventArgs e)
-		{
-			Pitch pitch = KeyControls.GetPitchFromKey(e.KeyCode);
-			session.StartPlayingPitch(pitch);
-		}
-
-		private void CnthesizerForm_KeyUp(object sender, KeyEventArgs e)
-		{
-			Pitch pitch = KeyControls.GetPitchFromKey(e.KeyCode);
-			session.StopPlayingPitch(pitch);
-		}
-
-		private void CnthesizerForm_Load(object sender, EventArgs e)
-		{
-			session = Session.CreateSession();
-		}
-
 		private void beatButton_Click(object sender, EventArgs e)
 		{
 			if (!session.BeatPlaying)
@@ -54,19 +37,40 @@ namespace Cnthesizer
 				session.ChangeBeatFrequency(bpmSlider.Value);
 		}
 
-		private void startRecordingBtn_Click(object sender, EventArgs e)
+		private void CnthesizerForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			session.StartRecording();
+			Pitch pitch = KeyControls.GetPitchFromKey(e.KeyCode);
+			session.StartPlayingPitch(pitch);
 		}
 
-		private void stopRecordingBtn_Click(object sender, EventArgs e)
+		private void CnthesizerForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			session.StopRecording();
+			Pitch pitch = KeyControls.GetPitchFromKey(e.KeyCode);
+			session.StopPlayingPitch(pitch);
+		}
+
+		private void CnthesizerForm_Load(object sender, EventArgs e)
+		{
+			session = Session.CreateSession();
+		}
+		private void recordingButton_Click(object sender, EventArgs e)
+		{
+			if (session.IsRecording)
+			{
+				session.StopRecording();
+				recordingButton.Text = "Start recording";
+			}
+			else
+			{
+				session.StartRecording();
+				recordingButton.Text = "Stop recording";
+			}
 		}
 
 		private void UpdateBeatButtonText(object sender, EventArgs e)
 		{
 			beatButton.Text = session.BeatPlaying ? "Stop beat" : "Play beat";
+			recordingButton.Text = session.IsRecording ? "Stop recording" : "Start recording";
 		}
 
 		private void UpdateWaveForm(object sender, EventArgs e)
