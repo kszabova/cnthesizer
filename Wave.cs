@@ -33,6 +33,14 @@ namespace Cnthesizer
 			return wave;
 		}
 
+		public static short[] SampleWaveForm(Pitch pitch, int length, Shift shift, WaveFormEquation waveForm, int sampleRate)
+		{
+			double baseFrequency = Frequency.GetFrequency(pitch);
+			double frequency = shift(baseFrequency);
+			short[] wave = waveForm(frequency, length, sampleRate);
+			return wave;
+		}
+
 		public static byte[] ConvertShortWaveToBytes(short[] wave)
 		{
 			byte[] binaryWave = new byte[wave.Length * sizeof(short)];
@@ -99,14 +107,14 @@ namespace Cnthesizer
 				}
 		}
 
-		public static void CreateWaveFile(string filename, Pitch pitch)
+		public static void CreateWaveFile(string filename, Pitch pitch, WaveFormEquation waveForm, int sampleRate)
 		{
-			short[] shortWave = Wave.CreateShortWave(pitch, 44100);
-			byte[] binaryWave = Wave.ConvertShortWaveToBytes(shortWave);
+			short[] shortWave = SampleWaveForm(pitch, sampleRate, Shifts.Unison, waveForm, sampleRate);
+			byte[] binaryWave = ConvertShortWaveToBytes(shortWave);
 
 			using (FileStream fs = File.Create(filename))
 			{
-				Wave.WriteToStream(fs, binaryWave, 44100, 44100, 16, 1);
+				WriteToStream(fs, binaryWave, sampleRate, sampleRate, 16, 1);
 			}
 		}
 	}

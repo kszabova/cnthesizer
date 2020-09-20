@@ -94,7 +94,7 @@ namespace Cnthesizer
 				}
 				catch (FileNotFoundException)
 				{
-					Wave.CreateWaveFile(GetWaveFilename(pitch), pitch);
+					Wave.CreateWaveFile(GetWaveFilename(pitch), pitch, WaveForm.SquareWave, 44100);
 					WaveFileReaders.Add(new WaveFileReader(GetWaveFilename(pitch)));
 				}
 				WaveChannels.Add(new WaveChannel32(GetWaveFileReader(pitch)));
