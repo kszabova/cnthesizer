@@ -20,12 +20,12 @@ namespace Cnthesizer
 		public static Epoch CreateEpoch(long duration, List<Pitch> frequencies)
 			=> new Epoch(duration, frequencies);
 
-		internal short[] ConvertToWave(int sampleSize, Shift shift)
+		internal short[] ConvertToWave(int sampleSize, Shift shift, WaveFormEquation waveForm, int sampleRate)
 		{
 			int length = ConvertDurationToLength(sampleSize);
 			List<short[]> waves = new List<short[]> { };
 			foreach (Pitch frequency in Frequencies)
-				waves.Add(Wave.CreateShortWave(frequency, length, shift));
+				waves.Add(Wave.SampleWaveForm(frequency, length, shift, waveForm, sampleRate));
 			short[] mixed = Mixing.MixListOfWaves(waves);
 			return mixed;
 		}

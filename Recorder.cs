@@ -202,7 +202,7 @@ namespace Cnthesizer
 			List<short[]> shortWaves = new List<short[]> { };
 			foreach (Epoch epoch in waves)
 			{
-				shortWaves.Add(epoch.ConvertToWave(session.SAMPLE_RATE, shift));
+				shortWaves.Add(epoch.ConvertToWave(session.SAMPLE_RATE, shift, session.WaveForm, session.SAMPLE_RATE));
 			}
 			short[] wave = shortWaves.SelectMany(w => w).ToArray();
 			return wave;
