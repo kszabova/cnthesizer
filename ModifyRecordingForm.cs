@@ -29,7 +29,7 @@ namespace Cnthesizer
 			this.majMinSelector.Items.AddRange(new string[] { "Minor", "Major", "N/A" });
 			this.scaleSelector.Items.AddRange(new string[]
 			{
-				"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
+				"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "N/A"
 			});
 		}
 
@@ -72,8 +72,12 @@ namespace Cnthesizer
 
 		private void UpdateScale()
 		{
-			if ((string)scaleSelector.SelectedItem == "N/A" || (string)majMinSelector.SelectedItem == "N/A")
+			if ((string)scaleSelector.SelectedItem == "N/A" || (string)majMinSelector.SelectedItem == "N/A"
+				|| scaleSelector.SelectedIndex == -1 || majMinSelector.SelectedIndex == -1)
+			{
 				recorder.UpdateScale(null);
+				return;
+			}
 
 			List<Pitch> scalePitches = new List<Pitch>
 			{

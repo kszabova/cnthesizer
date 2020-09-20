@@ -88,6 +88,7 @@
 			// 
 			// scaleSelector
 			// 
+			this.scaleSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.scaleSelector.FormattingEnabled = true;
 			this.scaleSelector.Location = new System.Drawing.Point(476, 61);
 			this.scaleSelector.Name = "scaleSelector";
@@ -97,6 +98,7 @@
 			// 
 			// majMinSelector
 			// 
+			this.majMinSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.majMinSelector.FormattingEnabled = true;
 			this.majMinSelector.Location = new System.Drawing.Point(639, 60);
 			this.majMinSelector.Name = "majMinSelector";
