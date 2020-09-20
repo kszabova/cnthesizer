@@ -10,6 +10,8 @@ namespace Cnthesizer
 	{
 		public static T[] MultiplyToLength<T>(this T[] source, int length)
 		{
+			if (source.Length == 0) return new T[length];
+
 			int srcLength = source.Length;
 			int fullCopies = length / source.Length;
 			int remainder = length % source.Length;

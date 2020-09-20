@@ -65,6 +65,11 @@ namespace Cnthesizer
 			UpdateScale();
 		}
 
+		private void manualHarmonyButton_Click(object sender, EventArgs e)
+		{
+			recorder.AddHarmony();
+		}
+
 		private void UpdateScale()
 		{
 			if ((string)scaleSelector.SelectedItem == "N/A" || (string)majMinSelector.SelectedItem == "N/A")

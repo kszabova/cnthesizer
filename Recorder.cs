@@ -21,6 +21,8 @@ namespace Cnthesizer
 		void StopPlayback(bool dispose);
 		void RegenerateRecording(Shift shift);
 		void UpdateScale(Scale scale);
+		void AddHarmony();
+		void AddChord(ChordName chord, long duration);
 	}
 
 	class Recorder : IRecorder
@@ -29,7 +31,7 @@ namespace Cnthesizer
 		public bool IsPitchModified { get; set; }
 		public string Filename { get; set; }
 		private Session session { get; }
-		private List<Epoch> epochs { get; }
+		private List<Epoch> melodyEpochs { get; }
 		private Stopwatch stopwatch;
 		private long lastStopwatchMillis;
 		private WaveChannel32 recording;
@@ -37,13 +39,15 @@ namespace Cnthesizer
 		private int bpm;
 		private short[] beatWave;
 		private Scale scale;
+		private List<Epoch> harmonyEpochs { get; }
 
 		private Recorder(Session session)
 		{
 			this.session = session;
 			IsPitchModified = false;
 			Filename = "recording.wav";
-			epochs = new List<Epoch> { };
+			melodyEpochs = new List<Epoch> { };
+			harmonyEpochs = new List<Epoch> { };
 			stopwatch = new Stopwatch();
 			lastStopwatchMillis = 0;
 		}
@@ -67,7 +71,7 @@ namespace Cnthesizer
 		{
 			long elapsedMilis = stopwatch.ElapsedMilliseconds;
 			long duration = elapsedMilis - lastStopwatchMillis;
-			epochs.Add(Epoch.CreateEpoch(duration, frequencies));
+			melodyEpochs.Add(Epoch.CreateEpoch(duration, frequencies));
 			lastStopwatchMillis = elapsedMilis;
 		}
 
@@ -89,16 +93,19 @@ namespace Cnthesizer
 
 		public void RegenerateRecording(Shift shift)
 		{
-			output.Dispose();
-			recording.Dispose();
+			if (output != null) output.Dispose();
+			if (output != null) recording.Dispose();
 
-			short[] wave = ConcatWaves(shift);
-			short[] combinedWave = Mixing.MixTwoWaves(wave, beatWave);
+			short[] melody = ConcatWaves(melodyEpochs, shift);
+			short[] harmony = ConcatWaves(harmonyEpochs, shift);
+			harmony = harmony.MultiplyToLength(melody.Length);
+			short[] beatWave = GenerateBeat(bpm, melody.Length);
+			short[] combinedWave = Mixing.MixListOfWaves(new List<short[]> { melody, harmony, beatWave });
 			byte[] binaryWave = Wave.ConvertShortWaveToBytes(combinedWave);
 
 			using (FileStream fs = File.Create(Filename))
 			{
-				Wave.WriteToStream(fs, binaryWave, wave.Length,
+				Wave.WriteToStream(fs, binaryWave, melody.Length,
 					session.SAMPLE_RATE, session.BITS_PER_SAMPLE, session.CHANNELS);
 			}
 			
@@ -112,28 +119,28 @@ namespace Cnthesizer
 			this.scale = scale;
 		}
 
-		private void SaveRecording()
+		public void AddHarmony()
 		{
-			// generate recorded wave
-			short[] wave = ConcatWaves(Shifts.Unison);
-			beatWave = GenerateBeat(bpm, wave.Length);
-			short[] combinedWave = Mixing.MixTwoWaves(wave, beatWave);
-
-			byte[] binaryWave = Wave.ConvertShortWaveToBytes(combinedWave);
-
-			// save recording to file
-			SaveRecordingForm saveRecording = new SaveRecordingForm(this);
-			saveRecording.ShowDialog();
-			using (FileStream fs = File.Create(Filename))
+			if (scale == null)
 			{
-				Wave.WriteToStream(fs, binaryWave, wave.Length,
-					session.SAMPLE_RATE, session.BITS_PER_SAMPLE, session.CHANNELS);
+				MessageBox.Show("You must select a scale first");
+				return;
 			}
 
-			// initialize output with recording
-			recording = new WaveChannel32(new WaveFileReader(Filename));
-			output = new DirectSoundOut();
-			output.Init(recording);
+			ManualHarmonyForm harmonyForm = new ManualHarmonyForm(this);
+			harmonyForm.ShowDialog();
+			RegenerateRecording(Shifts.Unison);
+		}
+
+		public void AddChord(ChordName chordName, long duration)
+		{
+			Chord chord = new Chord(scale, chordName);
+			harmonyEpochs.Add(Epoch.CreateEpoch(duration, chord.Tones));
+		}
+
+		private void SaveRecording()
+		{
+			RegenerateRecording(Shifts.Unison);
 		}
 
 		private void ModifyRecording()
@@ -142,14 +149,14 @@ namespace Cnthesizer
 			modifyRecording.ShowDialog();
 		}
 
-		private short[] ConcatWaves(Shift shift)
+		private short[] ConcatWaves(List<Epoch> waves, Shift shift)
 		{
-			List<short[]> waves = new List<short[]> { };
-			foreach (Epoch epoch in epochs)
+			List<short[]> shortWaves = new List<short[]> { };
+			foreach (Epoch epoch in waves)
 			{
-				waves.Add(epoch.ConvertToWave(session.SAMPLE_RATE, shift));
+				shortWaves.Add(epoch.ConvertToWave(session.SAMPLE_RATE, shift));
 			}
-			short[] wave = waves.SelectMany(w => w).ToArray();
+			short[] wave = shortWaves.SelectMany(w => w).ToArray();
 			return wave;
 		}
 
@@ -196,5 +203,9 @@ namespace Cnthesizer
 		public void RegenerateRecording(Shift shift) { }
 
 		public void UpdateScale(Scale scale) { }
+
+		public void AddHarmony() { }
+
+		public void AddChord(ChordName chordName, long duration) { }
 	}
 }

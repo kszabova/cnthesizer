@@ -84,6 +84,7 @@
 			this.manualHarmonyButton.TabIndex = 4;
 			this.manualHarmonyButton.Text = "Add harmony";
 			this.manualHarmonyButton.UseVisualStyleBackColor = true;
+			this.manualHarmonyButton.Click += new System.EventHandler(this.manualHarmonyButton_Click);
 			// 
 			// scaleSelector
 			// 

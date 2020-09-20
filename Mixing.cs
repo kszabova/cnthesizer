@@ -29,6 +29,8 @@ namespace Cnthesizer
 
 		public static short[] MixListOfWaves(List<short[]> waves)
 		{
+			if (waves.Count == 0) return new short[] { };
+
 			// sort waves by their length from shortest
 			waves.Sort((w1, w2) => w1.Length < w2.Length ? -1 : (w1.Length == w2.Length ? 0 : 1));
 

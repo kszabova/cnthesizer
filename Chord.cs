@@ -8,7 +8,7 @@ namespace Cnthesizer
 {
 	public enum ChordName
 	{
-		ilow, ii, iii, iv, v, vi, vii, ihigh
+		ilow, ii, iii, iv, v, vi, vii, ihigh, None
 	}
 
 	class Scale
@@ -65,6 +65,8 @@ namespace Cnthesizer
 
 		public List<Pitch> GetChord()
 		{
+			if (chordName == ChordName.None) return new List<Pitch> { };
+
 			Dictionary<ChordName, ChordShiftFromBase> chordShifts = scale.Major ? MajChordShifts : MinChordShifts;
 
 			List<Pitch> chord = new List<Pitch> { };
