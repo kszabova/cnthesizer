@@ -56,11 +56,9 @@ namespace Cnthesizer
 			}
 		}
 
-		public static WavePlayer GetWavePlayerFromKey(Keys key)
-			=> PitchSelector.GetWavePlayer(GetPitchFromKey(key));
-		public static WaveFileReader GetWaveFileReaderFromKey(Keys key)
-			=> PitchSelector.GetWaveFileReader(GetPitchFromKey(key));
-		public static WaveChannel32 GetWaveChannelFromKey(Keys key)
-			=> PitchSelector.GetWaveChannel(GetPitchFromKey(key));
+		public static WavePlayer GetWavePlayerFromKey(Keys key, WaveFormEquation waveForm)
+			=> PitchSelector.GetWavePlayer(GetPitchFromKey(key), waveForm);
+		public static WaveFileReader GetWaveFileReaderFromKey(Keys key, WaveFormEquation waveForm)
+			=> PitchSelector.GetWaveFileReader(GetPitchFromKey(key), waveForm);
 	}
 }

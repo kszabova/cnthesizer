@@ -8,7 +8,7 @@ namespace Cnthesizer
 {
 	public delegate short[] WaveFormEquation(double frequency, int length, int sampleRate);
 
-	static class WaveForm
+	static class WaveForms
 	{
 		public static short[] ConstantZero(double frequency, int length, int sampleRate)
 		{

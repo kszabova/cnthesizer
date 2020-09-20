@@ -72,9 +72,14 @@ namespace Cnthesizer
 	public static class PitchSelector
 	{
 		public static readonly List<double> Frequencies;
-		private static readonly List<WaveFileReader> WaveFileReaders = new List<WaveFileReader> { };
-		private static readonly List<WaveChannel32> WaveChannels = new List<WaveChannel32> { };
-		private static readonly List<WavePlayer> WavePlayers = new List<WavePlayer> { };
+
+		private static readonly List<WaveFileReader> SineWaveFileReaders = new List<WaveFileReader> { };
+		private static readonly List<WaveFileReader> SquareWaveFileReaders = new List<WaveFileReader> { };
+		private static readonly List<WaveFileReader> SawtoothWaveFileReaders = new List<WaveFileReader> { };
+		private static readonly List<WavePlayer> SineWavePlayers = new List<WavePlayer> { };
+		private static readonly List<WavePlayer> SquareWavePlayers = new List<WavePlayer> { };
+		private static readonly List<WavePlayer> SawtoothWavePlayers = new List<WavePlayer> { };
+
 		private static List<string> waveFileNames = new List<string>
 		{
 			"empty.wav",
@@ -83,29 +88,58 @@ namespace Cnthesizer
 			"a5.wav", "am5.wav", "b5.wav", "c6.wav", "cm6.wav", "d6.wav", "dm6.wav", "e6.wav", "f6.wav", "fm6.wav", "g6.wav", "gm6.wav",
 			"a6.wav"
 		};
+		private static string sinePrefix = "sine_";
+		private static string squarePrefix = "square_";
+		private static string sawtoothPrefix = "saw_";
+
+		private static List<(string, WaveFormEquation)> prefixFormPairs = new List<(string, WaveFormEquation)>
+		{
+			(sinePrefix, WaveForms.SineWave),
+			(squarePrefix, WaveForms.SquareWave),
+			(sawtoothPrefix, WaveForms.SawtoothWave)
+		};
 
 		static PitchSelector()
 		{
 			foreach (Pitch pitch in EnumeratePitches())
 			{
-				try
+				foreach ((string, WaveFormEquation) waveForm in prefixFormPairs)
 				{
-					WaveFileReaders.Add(new WaveFileReader(GetWaveFilename(pitch)));
+					List<WaveFileReader> wfrs = GetFileReaderByWaveForm(waveForm.Item2);
+					List<WavePlayer> wps = GetPlayerByWaveForm(waveForm.Item2);
+
+					string filename = waveForm.Item1 + GetWaveFilename(pitch);
+					try
+					{
+						wfrs.Add(new WaveFileReader(filename));
+					}
+					catch (FileNotFoundException)
+					{
+						Wave.CreateWaveFile(filename, pitch, waveForm.Item2, 44100);
+						wfrs.Add(new WaveFileReader(filename));
+					}
+					wps.Add(new WavePlayer(filename));
 				}
-				catch (FileNotFoundException)
-				{
-					Wave.CreateWaveFile(GetWaveFilename(pitch), pitch, WaveForm.SquareWave, 44100);
-					WaveFileReaders.Add(new WaveFileReader(GetWaveFilename(pitch)));
-				}
-				WaveChannels.Add(new WaveChannel32(GetWaveFileReader(pitch)));
-				WavePlayers.Add(new WavePlayer(GetWaveFilename(pitch)));
 			}
 		}
 
 		public static string GetWaveFilename(Pitch pitch) => waveFileNames[(int)pitch];
-		public static WaveFileReader GetWaveFileReader(Pitch pitch) => WaveFileReaders[(int)pitch];
-		public static WaveChannel32 GetWaveChannel(Pitch pitch) => WaveChannels[(int)pitch];
-		public static WavePlayer GetWavePlayer(Pitch pitch) => WavePlayers[(int)pitch];
+
+		public static WaveFileReader GetWaveFileReader(Pitch pitch, WaveFormEquation waveForm)
+		{
+			string filename = GetWaveFilename(pitch);
+			int index = waveFileNames.IndexOf(filename);
+			var fileReader = GetFileReaderByWaveForm(waveForm);
+			return fileReader[index];
+		}
+
+		public static WavePlayer GetWavePlayer(Pitch pitch, WaveFormEquation waveForm)
+		{
+			string filename = GetWaveFilename(pitch);
+			int index = waveFileNames.IndexOf(filename);
+			var wavePlayer = GetPlayerByWaveForm(waveForm);
+			return wavePlayer[index];
+		}
 
 		public static IEnumerable<Pitch> EnumeratePitches()
 		{
@@ -120,6 +154,30 @@ namespace Cnthesizer
 				throw new ApplicationException("Invalid number of semitones");
 			else
 				return (Pitch)newIndex;
+		}
+
+		private static List<WaveFileReader> GetFileReaderByWaveForm(WaveFormEquation waveForm)
+		{
+			if (waveForm == WaveForms.SineWave)
+				return SineWaveFileReaders;
+			else if (waveForm == WaveForms.SquareWave)
+				return SquareWaveFileReaders;
+			else if (waveForm == WaveForms.SawtoothWave)
+				return SawtoothWaveFileReaders;
+			else
+				throw new ApplicationException("Unknow wave form");
+		}
+
+		private static List<WavePlayer> GetPlayerByWaveForm(WaveFormEquation waveForm)
+		{
+			if (waveForm == WaveForms.SineWave)
+				return SineWavePlayers;
+			else if (waveForm == WaveForms.SquareWave)
+				return SquareWavePlayers;
+			else if (waveForm == WaveForms.SawtoothWave)
+				return SawtoothWavePlayers;
+			else
+				throw new ApplicationException((waveForm == null).ToString());
 		}
 	}
 }

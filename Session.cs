@@ -14,6 +14,7 @@ namespace Cnthesizer
 		public int SAMPLE_RATE => 44100;
 		public short BITS_PER_SAMPLE => 16;
 		public short CHANNELS => 1;
+		public WaveFormEquation WaveForm { get; private set; }
 		public MixingWaveProvider32 Mixer { get; }
 		public DirectSoundOut Output { get; }
 		public bool[] CurrentlyPlaying { get; }
@@ -26,6 +27,8 @@ namespace Cnthesizer
 
 		private Session()
 		{
+			WaveForm = WaveForms.SquareWave;
+
 			// set all frequencies as not-playing 
 			CurrentlyPlaying = new bool[Enum.GetNames(typeof(Pitch)).Length];
 			foreach (Pitch frequency in Enum.GetValues(typeof(Pitch)))
@@ -34,7 +37,7 @@ namespace Cnthesizer
 			}
 
 			// initialize mixer with "silence" playing
-			Mixer = new MixingWaveProvider32(new List<WaveChannel32> { PitchSelector.GetWavePlayer(Pitch.Empty).Channel });
+			Mixer = new MixingWaveProvider32(new List<WaveChannel32> { PitchSelector.GetWavePlayer(Pitch.Empty, WaveForm).Channel });
 			CurrentlyPlaying[(int)Pitch.Empty] = true;
 
 			// initialize output
@@ -60,7 +63,7 @@ namespace Cnthesizer
 			{
 				UpdateRecorder();
 
-				WavePlayer inputStream = PitchSelector.GetWavePlayer(pitch);
+				WavePlayer inputStream = PitchSelector.GetWavePlayer(pitch, WaveForm);
 				Mixer.AddInputStream(inputStream.Channel);
 				CurrentlyPlaying[(int)pitch] = true;
 			}
@@ -73,7 +76,7 @@ namespace Cnthesizer
 			// do nothing if no tone was released
 			if (pitch == Pitch.Empty) return;
 
-			WavePlayer inputStream = PitchSelector.GetWavePlayer(pitch);
+			WavePlayer inputStream = PitchSelector.GetWavePlayer(pitch, WaveForm);
 			Mixer.RemoveInputStream(inputStream.Channel);
 			CurrentlyPlaying[(int)pitch] = false;
 		}

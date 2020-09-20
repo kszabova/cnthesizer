@@ -149,7 +149,7 @@ namespace Cnthesizer
 
 			ManualHarmonyForm harmonyForm = new ManualHarmonyForm(this);
 
-			harmonyProvider = new MixingWaveProvider32(new List<WaveChannel32> { PitchSelector.GetWavePlayer(Pitch.Empty).Channel });
+			harmonyProvider = new MixingWaveProvider32(new List<WaveChannel32> { PitchSelector.GetWavePlayer(Pitch.Empty, session.WaveForm).Channel });
 			harmonyOutput = new DirectSoundOut();
 			harmonyOutput.Init(harmonyProvider);
 			harmonyOutput.Play();
@@ -169,7 +169,7 @@ namespace Cnthesizer
 			Chord chord = new Chord(scale, chordName);
 			foreach (Pitch pitch in chord.Tones)
 			{
-				harmonyProvider.AddInputStream(PitchSelector.GetWavePlayer(pitch).Channel);
+				harmonyProvider.AddInputStream(PitchSelector.GetWavePlayer(pitch, session.WaveForm).Channel);
 			}
 			lastChord = chord;
 		}
@@ -180,7 +180,7 @@ namespace Cnthesizer
 			{
 				foreach (Pitch pitch in lastChord.Tones)
 				{
-					harmonyProvider.RemoveInputStream(PitchSelector.GetWavePlayer(pitch).Channel);
+					harmonyProvider.RemoveInputStream(PitchSelector.GetWavePlayer(pitch, session.WaveForm).Channel);
 				}
 			}
 			lastChord = null;
