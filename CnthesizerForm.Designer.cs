@@ -33,6 +33,9 @@
 			this.bpmValueTextBox = new System.Windows.Forms.TextBox();
 			this.startRecordingBtn = new System.Windows.Forms.Button();
 			this.stopRecordingBtn = new System.Windows.Forms.Button();
+			this.sineButton = new System.Windows.Forms.Button();
+			this.squareButton = new System.Windows.Forms.Button();
+			this.sawtoothButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.bpmSlider)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -86,11 +89,44 @@
 			this.stopRecordingBtn.UseVisualStyleBackColor = true;
 			this.stopRecordingBtn.Click += new System.EventHandler(this.stopRecordingBtn_Click);
 			// 
+			// sineButton
+			// 
+			this.sineButton.Location = new System.Drawing.Point(46, 326);
+			this.sineButton.Name = "sineButton";
+			this.sineButton.Size = new System.Drawing.Size(93, 83);
+			this.sineButton.TabIndex = 5;
+			this.sineButton.Text = "Sine";
+			this.sineButton.UseVisualStyleBackColor = true;
+			this.sineButton.Click += new System.EventHandler(this.UpdateWaveForm);
+			// 
+			// squareButton
+			// 
+			this.squareButton.Location = new System.Drawing.Point(167, 326);
+			this.squareButton.Name = "squareButton";
+			this.squareButton.Size = new System.Drawing.Size(93, 83);
+			this.squareButton.TabIndex = 6;
+			this.squareButton.Text = "Square";
+			this.squareButton.UseVisualStyleBackColor = true;
+			this.squareButton.Click += new System.EventHandler(this.UpdateWaveForm);
+			// 
+			// sawtoothButton
+			// 
+			this.sawtoothButton.Location = new System.Drawing.Point(289, 326);
+			this.sawtoothButton.Name = "sawtoothButton";
+			this.sawtoothButton.Size = new System.Drawing.Size(93, 83);
+			this.sawtoothButton.TabIndex = 7;
+			this.sawtoothButton.Text = "Sawtooth";
+			this.sawtoothButton.UseVisualStyleBackColor = true;
+			this.sawtoothButton.Click += new System.EventHandler(this.UpdateWaveForm);
+			// 
 			// CnthesizerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.sawtoothButton);
+			this.Controls.Add(this.squareButton);
+			this.Controls.Add(this.sineButton);
 			this.Controls.Add(this.stopRecordingBtn);
 			this.Controls.Add(this.startRecordingBtn);
 			this.Controls.Add(this.bpmValueTextBox);
@@ -116,5 +152,8 @@
 		private System.Windows.Forms.TextBox bpmValueTextBox;
 		private System.Windows.Forms.Button startRecordingBtn;
 		private System.Windows.Forms.Button stopRecordingBtn;
+		private System.Windows.Forms.Button sineButton;
+		private System.Windows.Forms.Button squareButton;
+		private System.Windows.Forms.Button sawtoothButton;
 	}
 }

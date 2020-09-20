@@ -135,6 +135,11 @@ namespace Cnthesizer
 			recorder = RecorderPlaceholder.Instance;
 		}
 
+		public void ChangeWaveForm(WaveFormEquation waveForm)
+		{
+			WaveForm = waveForm;
+		}
+
 		private List<Pitch> GetFrequenciesPlaying()
 		{
 			List<Pitch> frequenciesPlaying = new List<Pitch> { };

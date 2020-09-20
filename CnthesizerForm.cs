@@ -79,5 +79,28 @@ namespace Cnthesizer
 		{
 			beatButton.Text = session.BeatPlaying ? "Stop beat" : "Play beat";
 		}
+
+		private void UpdateWaveForm(object sender, EventArgs e)
+		{
+			Button buttonClicked = (Button)sender;
+			switch (buttonClicked.Name)
+			{
+				case "sineButton":
+					{
+						session.ChangeWaveForm(WaveForms.SineWave);
+						break;
+					}
+				case "squareButton":
+					{
+						session.ChangeWaveForm(WaveForms.SquareWave);
+						break;
+					}
+				case "sawtoothButton":
+					{
+						session.ChangeWaveForm(WaveForms.SawtoothWave);
+						break;
+					}
+			}
+		}
 	}
 }
