@@ -11,7 +11,7 @@ namespace Cnthesizer
 		ilow, ii, iii, iv, v, vi, vii, ihigh, None
 	}
 
-	class Scale
+	public class Scale
 	{
 		public bool Major;
 		public Pitch Base;
@@ -19,7 +19,7 @@ namespace Cnthesizer
 			=> (Major, Base) = (major, baseTone);
 	}
 
-	class Chord
+	public class Chord
 	{
 		struct ChordShiftFromBase
 		{

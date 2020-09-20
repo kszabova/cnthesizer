@@ -21,7 +21,7 @@ namespace Cnthesizer
 		void StopPlayback(bool dispose);
 		void RegenerateRecording(Shift shift);
 		void UpdateScale(Scale scale);
-		void AddHarmony();
+		void AddHarmony(bool manual);
 		void AddChord(ChordName chord, long duration);
 		void PlayChord(ChordName chord);
 		void StopChord();
@@ -132,30 +132,32 @@ namespace Cnthesizer
 			this.scale = scale;
 		}
 
-		public void AddHarmony()
+		public void AddHarmony(bool manual)
 		{
 			if (scale == null)
 			{
-				MessageBox.Show("You must select a scale first");
-				return;
+				throw new ApplicationException("No scale selected");
 			}
 
 			// remove previously added harmony
 			harmonyEpochs = new List<Epoch> { };
 			RegenerateRecording(Shifts.Unison);
 
-			// adjust volume of recording
-			recordingChannel.Volume = 2.5f;
+			if (manual)
+			{
+				// adjust volume of recording
+				recordingChannel.Volume = 2.5f;
 
-			ManualHarmonyForm harmonyForm = new ManualHarmonyForm(this);
+				ManualHarmonyForm harmonyForm = new ManualHarmonyForm(this);
 
-			harmonyProvider = new MixingWaveProvider32(new List<WaveChannel32> { PitchSelector.GetWavePlayer(Pitch.Empty, session.WaveForm).Channel });
-			harmonyOutput = new DirectSoundOut();
-			harmonyOutput.Init(harmonyProvider);
-			harmonyOutput.Play();
+				harmonyProvider = new MixingWaveProvider32(new List<WaveChannel32> { PitchSelector.GetWavePlayer(Pitch.Empty, session.WaveForm).Channel });
+				harmonyOutput = new DirectSoundOut();
+				harmonyOutput.Init(harmonyProvider);
+				harmonyOutput.Play();
 
-			harmonyForm.ShowDialog();
-			RegenerateRecording(Shifts.Unison);
+				harmonyForm.ShowDialog();
+				RegenerateRecording(Shifts.Unison);
+			}
 		}
 
 		public void AddChord(ChordName chordName, long duration)
@@ -188,12 +190,16 @@ namespace Cnthesizer
 
 		private void SaveRecording()
 		{
+			// get filename
+			SaveRecordingForm saveRecording = new SaveRecordingForm(this);
+			saveRecording.ShowDialog();
+
 			RegenerateRecording(Shifts.Unison);
 		}
 
 		private void ModifyRecording()
 		{
-			ModifyRecordingForm modifyRecording = new ModifyRecordingForm(this);
+			ModifyRecordingForm modifyRecording = new ModifyRecordingForm(this, bpm);
 			modifyRecording.ShowDialog();
 		}
 
@@ -202,7 +208,7 @@ namespace Cnthesizer
 			List<short[]> shortWaves = new List<short[]> { };
 			foreach (Epoch epoch in waves)
 			{
-				shortWaves.Add(epoch.ConvertToWave(session.SAMPLE_RATE, shift, session.WaveForm, session.SAMPLE_RATE));
+				shortWaves.Add(epoch.ConvertToWave(session.SAMPLE_RATE, shift, session.WaveForm));
 			}
 			short[] wave = shortWaves.SelectMany(w => w).ToArray();
 			return wave;
@@ -252,7 +258,7 @@ namespace Cnthesizer
 
 		public void UpdateScale(Scale scale) { }
 
-		public void AddHarmony() { }
+		public void AddHarmony(bool manual) { }
 
 		public void AddChord(ChordName chordName, long duration) { }
 

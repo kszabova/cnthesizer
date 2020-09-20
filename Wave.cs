@@ -64,6 +64,21 @@ namespace Cnthesizer
 			return binaryWave;
 		}
 
+		public static short[] CreateChordProgression(List<Chord> chords, int length, int bpm, Shift shift, WaveFormEquation waveForm)
+		{
+			int oneChordDuration = 1 / (bpm / 60) * 1000;
+			List<short[]> chordWaves = new List<short[]> { };
+			foreach (Chord chord in chords)
+			{
+				Epoch epoch = Epoch.CreateEpoch(oneChordDuration, chord.Tones);
+				short[] chordWave = epoch.ConvertToWave(SAMPLE_RATE, shift, waveForm);
+				chordWaves.Add(chordWave);
+			}
+			short[] wave = chordWaves.SelectMany(w => w).ToArray();
+			short[] multipliedWave = wave.MultiplyToLength(length);
+			return multipliedWave;
+		}
+
 		public static void WriteToStream(Stream stream, byte[] wave, int samples, int sampleRate, short bitsPerSample, short channels)
 		{
 			using (MemoryStream memoryStream = new MemoryStream())

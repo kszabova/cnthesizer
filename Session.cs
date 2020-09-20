@@ -27,7 +27,7 @@ namespace Cnthesizer
 
 		private Session()
 		{
-			WaveForm = WaveForms.SquareWave;
+			WaveForm = WaveForms.SineWave;
 
 			// set all frequencies as not-playing 
 			CurrentlyPlaying = new bool[Enum.GetNames(typeof(Pitch)).Length];
