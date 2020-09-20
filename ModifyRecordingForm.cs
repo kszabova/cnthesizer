@@ -14,6 +14,7 @@ namespace Cnthesizer
 	{
 		private IRecorder recorder;
 		private int bpm;
+		private bool showMessageWhenHarmonyGenerated = true;
 
 		public ModifyRecordingForm(IRecorder recorder, int bpm)
 		{
@@ -92,6 +93,12 @@ namespace Cnthesizer
 				return;
 			}
 
+			if (chordProgSelector.SelectedIndex == -1 || (string)chordProgSelector.SelectedItem == "N/A")
+			{
+				MessageBox.Show("You must select a chord progression!");
+				return;
+			}
+
 			try
 			{
 				recorder.AddHarmony(false);
@@ -167,11 +174,19 @@ namespace Cnthesizer
 			}
 
 			recorder.RegenerateRecording(Shifts.Unison);
+
+			if (showMessageWhenHarmonyGenerated)
+				MessageBox.Show("Done! Hear the result by clicking Play.");
 		}
 
 		private void chordFreqTrackBar_Scroll(object sender, EventArgs e)
 		{
 			chordFreqLabel.Text = chordFreqTrackBar.Value.ToString();
+		}
+
+		private void showMessageCheckBox_CheckedChanged(object sender, EventArgs e)
+		{
+			showMessageWhenHarmonyGenerated = showMessageCheckBox.Checked;
 		}
 
 		private void UpdateScale()

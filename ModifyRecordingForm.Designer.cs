@@ -39,6 +39,7 @@
 			this.chordFreqTrackBar = new System.Windows.Forms.TrackBar();
 			this.automaticHarmonyButton = new System.Windows.Forms.Button();
 			this.chordFreqLabel = new System.Windows.Forms.Label();
+			this.showMessageCheckBox = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.chordFreqTrackBar)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -150,11 +151,25 @@
 			this.chordFreqLabel.TabIndex = 10;
 			this.chordFreqLabel.Text = "1";
 			// 
+			// showMessageCheckBox
+			// 
+			this.showMessageCheckBox.AutoSize = true;
+			this.showMessageCheckBox.Checked = true;
+			this.showMessageCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.showMessageCheckBox.Location = new System.Drawing.Point(534, 387);
+			this.showMessageCheckBox.Name = "showMessageCheckBox";
+			this.showMessageCheckBox.Size = new System.Drawing.Size(198, 21);
+			this.showMessageCheckBox.TabIndex = 11;
+			this.showMessageCheckBox.Text = "Show message when done";
+			this.showMessageCheckBox.UseVisualStyleBackColor = true;
+			this.showMessageCheckBox.CheckedChanged += new System.EventHandler(this.showMessageCheckBox_CheckedChanged);
+			// 
 			// ModifyRecordingForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.showMessageCheckBox);
 			this.Controls.Add(this.chordFreqLabel);
 			this.Controls.Add(this.automaticHarmonyButton);
 			this.Controls.Add(this.chordFreqTrackBar);
@@ -188,5 +203,6 @@
 		private System.Windows.Forms.TrackBar chordFreqTrackBar;
 		private System.Windows.Forms.Button automaticHarmonyButton;
 		private System.Windows.Forms.Label chordFreqLabel;
+		private System.Windows.Forms.CheckBox showMessageCheckBox;
 	}
 }
