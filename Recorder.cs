@@ -44,7 +44,7 @@ namespace Cnthesizer
 		private int bpm;
 		private short[] beatWave;
 		private Scale scale;
-		private List<Epoch> harmonyEpochs { get; }
+		private List<Epoch> harmonyEpochs { get; set; }
 
 		private Recorder(Session session)
 		{
@@ -98,23 +98,31 @@ namespace Cnthesizer
 
 		public void RegenerateRecording(Shift shift)
 		{
+			// dispose recording channel and recording output if they exist
 			if (recordingOutput != null) recordingOutput.Dispose();
-			if (recordingOutput != null) recordingChannel.Dispose();
+			if (recordingChannel != null) recordingChannel.Dispose();
 
+			// generate waves from epochs
 			short[] melody = ConcatWaves(melodyEpochs, shift);
 			short[] harmony = ConcatWaves(harmonyEpochs, shift);
 			harmony = harmony.MultiplyToLength(melody.Length);
-			if (beatWave == null) beatWave = GenerateBeat(bpm, melody.Length);
+			if (beatWave == null)
+				beatWave = GenerateBeat(bpm, melody.Length);
+
+			// mix melody, harmony and beat
 			short[] combinedWave = Mixing.MixListOfWaves(new List<short[]> { melody, harmony, beatWave });
 			byte[] binaryWave = Wave.ConvertShortWaveToBytes(combinedWave);
 
+			// write the result into a file
 			using (FileStream fs = File.Create(Filename))
 			{
 				Wave.WriteToStream(fs, binaryWave, melody.Length,
 					session.SAMPLE_RATE, session.BITS_PER_SAMPLE, session.CHANNELS);
 			}
 			
+			// create new channel and output for playing the recording
 			recordingChannel = new WaveChannel32(new WaveFileReader(Filename));
+			recordingChannel.Volume = 1.0f;
 			recordingOutput = new DirectSoundOut();
 			recordingOutput.Init(recordingChannel);
 		}
@@ -131,6 +139,13 @@ namespace Cnthesizer
 				MessageBox.Show("You must select a scale first");
 				return;
 			}
+
+			// remove previously added harmony
+			harmonyEpochs = new List<Epoch> { };
+			RegenerateRecording(Shifts.Unison);
+
+			// adjust volume of recording
+			recordingChannel.Volume = 2.5f;
 
 			ManualHarmonyForm harmonyForm = new ManualHarmonyForm(this);
 
