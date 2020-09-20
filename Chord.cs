@@ -65,7 +65,7 @@ namespace Cnthesizer
 
 		public List<Pitch> GetChord()
 		{
-			if (chordName == ChordName.None) return new List<Pitch> { };
+			if (chordName == ChordName.None) return new List<Pitch> { Pitch.Empty };
 
 			Dictionary<ChordName, ChordShiftFromBase> chordShifts = scale.Major ? MajChordShifts : MinChordShifts;
 

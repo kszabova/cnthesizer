@@ -50,8 +50,8 @@ namespace Cnthesizer
 		{
 			long elapsed = stopwatch.ElapsedMilliseconds;
 			long duration = elapsed - lastElapsedMillis;
-			recorder.AddChord(chordName, duration);
 			lastElapsedMillis = elapsed;
+			recorder.AddChord(chordName, duration);
 		}
 
 		private ChordName GetChordNameFromButton(Button button)
