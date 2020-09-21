@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Cnthesizer
@@ -30,7 +31,7 @@ namespace Cnthesizer
 
 		private void bpmSlider_ValueChanged(object sender, EventArgs e)
 		{
-			bpmValueTextBox.Text = bpmSlider.Value.ToString();
+			beatFreqLabel.Text = bpmSlider.Value.ToString();
 
 			// re-generate beat if it is playing
 			if (session.BeatPlaying)
@@ -81,16 +82,25 @@ namespace Cnthesizer
 				case "sineButton":
 					{
 						session.ChangeWaveForm(WaveForms.SineWave);
+						sineButton.BackColor = Color.CornflowerBlue;
+						squareButton.BackColor = Color.RoyalBlue;
+						sawtoothButton.BackColor = Color.RoyalBlue;
 						break;
 					}
 				case "squareButton":
 					{
 						session.ChangeWaveForm(WaveForms.SquareWave);
+						squareButton.BackColor = Color.CornflowerBlue;
+						sineButton.BackColor = Color.RoyalBlue;
+						sawtoothButton.BackColor = Color.RoyalBlue;
 						break;
 					}
 				case "sawtoothButton":
 					{
 						session.ChangeWaveForm(WaveForms.SawtoothWave);
+						sawtoothButton.BackColor = Color.CornflowerBlue;
+						squareButton.BackColor = Color.RoyalBlue;
+						sineButton.BackColor = Color.RoyalBlue;
 						break;
 					}
 			}

@@ -69,6 +69,8 @@ namespace Cnthesizer
 		{
 			WaveForm = waveForm;
 			ResetOutput();
+			if (Beat != null)
+				SoundMixer.AddInputStream(Beat.Channel);
 		}
 
 		/// <summary>

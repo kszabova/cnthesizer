@@ -140,7 +140,7 @@ namespace Cnthesizer
 				MessageBox.Show("Done! Hear the result by clicking Play.");
 		}
 
-		private void chordFreqTrackBar_Scroll(object sender, EventArgs e)
+		private void chordFreqTrackBar_ValueChanged(object sender, EventArgs e)
 		{
 			// update chord frequency label
 			chordFreqLabel.Text = chordFreqTrackBar.Value.ToString();
