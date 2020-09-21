@@ -15,6 +15,7 @@ namespace Cnthesizer
 
 		private void filenameTextBox_KeyPress(object sender, KeyPressEventArgs e)
 		{
+			// save filename when enter is pressed
 			if (e.KeyChar == (char)Keys.Return) SaveFilename();
 		}
 

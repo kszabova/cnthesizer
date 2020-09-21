@@ -2,8 +2,18 @@
 
 namespace Cnthesizer
 {
+	/// <summary>
+	/// Class for handling wave mixing
+	/// </summary>
 	internal class Mixing
 	{
+		/// <summary>
+		/// Takes a list of waves not necessarily of the same length
+		/// and returns a sound wave corresponding to the sound
+		/// when all of the waves are playing at once.
+		/// </summary>
+		/// <param name="waves">Input waves</param>
+		/// <returns>Mixed wave</returns>
 		public static short[] MixListOfWaves(List<short[]> waves)
 		{
 			if (waves.Count == 0) return new short[] { };
@@ -38,6 +48,16 @@ namespace Cnthesizer
 			return mixedWave;
 		}
 
+		/// <summary>
+		/// Takes two waves not necessarily of the same length
+		/// and returns wave corresponding to the sound of both 
+		/// of them playing at once.
+		/// Does not have the overhead of a list, therefore it
+		/// is slightly better for mixing two waves than MixListOfWaves().
+		/// </summary>
+		/// <param name="a">First input wave</param>
+		/// <param name="b">Second input wave</param>
+		/// <returns>Mixed wave</returns>
 		public static short[] MixTwoWaves(short[] a, short[] b)
 		{
 			short[] shorter = a.Length < b.Length ? a : b;

@@ -7,17 +7,36 @@ using System.Linq;
 
 namespace Cnthesizer
 {
+	/// <summary>
+	/// Provides methods to record audio.
+	/// </summary>
 	internal interface IRecorder
 	{
 		string Filename { get; set; }
 		bool IsActive { get; }
-		Shift Shift { get; set; }
 
-		void AddHarmony(bool manual);
+		void AddNewEpoch(List<Pitch> frequencies);
+
+		void Playback();
+
+		void StartRecording();
+
+		void StopPlayback(bool dispose);
+
+		void StopRecording();
+	}
+
+
+	/// <summary>
+	/// Provides methods to modify audio.
+	/// </summary>
+	internal interface IModifier
+	{
+		Shift Shift { get; set; }
 
 		void AddChord(ChordName chord, long duration);
 
-		void AddNewEpoch(List<Pitch> frequencies);
+		void AddHarmony(bool manual);
 
 		void Playback();
 
@@ -25,23 +44,24 @@ namespace Cnthesizer
 
 		void RegenerateRecording();
 
-		void StartRecording();
+		void StopPlayback(bool dispose);
 
 		void StopChord();
 
-		void StopPlayback(bool dispose);
-
-		void StopRecording();
 		void UpdateScale(Scale scale);
+
 	}
 
-	internal class Recorder : IRecorder
+	/// <summary>
+	/// Class that can record and modify audio.
+	/// </summary>
+	internal class Recorder : IRecorder, IModifier
 	{
 		private short[] beatWave;
 		private int bpm;
 		private DirectSoundOut harmonyOutput;
 		private MixingWaveProvider32 harmonyProvider;
-		private Chord lastChord = null;
+		private Chord lastChord;
 		private long lastStopwatchMillis;
 		private WaveChannel32 recordingChannel;
 		private DirectSoundOut recordingOutput;
@@ -49,6 +69,7 @@ namespace Cnthesizer
 		private Stopwatch stopwatch;
 		private Recorder(Session session)
 		{
+			// initialize values
 			this.session = session;
 			IsPitchModified = false;
 			Filename = "recording.wav";
@@ -68,6 +89,11 @@ namespace Cnthesizer
 		private Session session { get; }
 		public static Recorder CreateRecording(Session session) => new Recorder(session);
 
+		/// <summary>
+		/// Adds recorded or generated harmony to pre-recorded melody and beat.
+		/// Stores the result in the original file.
+		/// </summary>
+		/// <param name="manual">Should harmony be added manually (as opposed to automatic generation)</param>
 		public void AddHarmony(bool manual)
 		{
 			if (scale == null)
@@ -96,12 +122,22 @@ namespace Cnthesizer
 			}
 		}
 
+		/// <summary>
+		/// Add one chord and its duration to harmony.
+		/// </summary>
+		/// <param name="chordName">Name of chord played</param>
+		/// <param name="duration">Length of chord in milliseconds</param>
 		public void AddChord(ChordName chordName, long duration)
 		{
 			Chord chord = new Chord(scale, chordName);
 			harmonyEpochs.Add(Epoch.CreateEpoch(duration, chord.Tones));
 		}
 
+		/// <summary>
+		/// Adds list of tones being played and sets their duration
+		/// to the difference since the last change.
+		/// </summary>
+		/// <param name="frequencies">List of Pitches played</param>
 		public void AddNewEpoch(List<Pitch> frequencies)
 		{
 			long elapsedMilis = stopwatch.ElapsedMilliseconds;
@@ -110,12 +146,19 @@ namespace Cnthesizer
 			lastStopwatchMillis = elapsedMilis;
 		}
 
+		/// <summary>
+		/// Play recorded audio.
+		/// </summary>
 		public void Playback()
 		{
 			recordingChannel.Seek(0, SeekOrigin.Begin);
 			recordingOutput.Play();
 		}
 
+		/// <summary>
+		/// Plays given chord.
+		/// </summary>
+		/// <param name="chordName">Name of chord played</param>
 		public void PlayChord(ChordName chordName)
 		{
 			Chord chord = new Chord(scale, chordName);
@@ -126,6 +169,10 @@ namespace Cnthesizer
 			lastChord = chord;
 		}
 
+		/// <summary>
+		/// Generates a new recording from all the changes that have been made
+		/// (e.g. added harmony, shifted scale).
+		/// </summary>
 		public void RegenerateRecording()
 		{
 			// dispose recording channel and recording output if they exist
@@ -147,7 +194,7 @@ namespace Cnthesizer
 			using (FileStream fs = File.Create(Filename))
 			{
 				Wave.WriteToStream(fs, binaryWave, melody.Length,
-					session.SAMPLE_RATE, session.BITS_PER_SAMPLE, session.CHANNELS);
+					Config.SAMPLE_RATE, Config.BITS_PER_SAMPLE, Config.CHANNELS);
 			}
 
 			// create new channel and output for playing the recording
@@ -157,12 +204,18 @@ namespace Cnthesizer
 			recordingOutput.Init(recordingChannel);
 		}
 
+		/// <summary>
+		/// Starts recording.
+		/// </summary>
 		public void StartRecording()
 		{
 			stopwatch.Start();
 			bpm = session.BeatPlaying ? session.CurrentBpm : 0;
 		}
 
+		/// <summary>
+		/// Stops playing currently played chord.
+		/// </summary>
 		public void StopChord()
 		{
 			if (lastChord != null)
@@ -175,6 +228,10 @@ namespace Cnthesizer
 			lastChord = null;
 		}
 
+		/// <summary>
+		/// Stops playing recording.
+		/// </summary>
+		/// <param name="dispose"></param>
 		public void StopPlayback(bool dispose = false)
 		{
 			recordingOutput.Stop();
@@ -185,22 +242,32 @@ namespace Cnthesizer
 			}
 		}
 
+		/// <summary>
+		/// Stops recording. Prompts user to save it (specify filename)
+		/// and then to modify it.
+		/// </summary>
 		public void StopRecording()
 		{
 			stopwatch.Stop();
 			SaveRecording();
 			ModifyRecording();
 		}
+
+		/// <summary>
+		/// Updates scale of recording.
+		/// </summary>
+		/// <param name="scale">New scale</param>
 		public void UpdateScale(Scale scale)
 		{
 			this.scale = scale;
 		}
+
 		private short[] ConcatWaves(List<Epoch> waves)
 		{
 			List<short[]> shortWaves = new List<short[]> { };
 			foreach (Epoch epoch in waves)
 			{
-				shortWaves.Add(epoch.ConvertToWave(session.SAMPLE_RATE, Shift, session.WaveForm));
+				shortWaves.Add(epoch.ConvertToWave(Config.SAMPLE_RATE, Shift, session.WaveForm));
 			}
 			short[] wave = shortWaves.SelectMany(w => w).ToArray();
 			return wave;
@@ -208,6 +275,7 @@ namespace Cnthesizer
 
 		private short[] GenerateBeat(int bpm, int samples)
 		{
+			// beat frequency of 0 means there was no beat
 			if (bpm != 0)
 			{
 				short[] beat = Wave.GenerateBeatWave(bpm);
@@ -227,7 +295,6 @@ namespace Cnthesizer
 
 		private void SaveRecording()
 		{
-			// get filename
 			SaveRecordingForm saveRecording = new SaveRecordingForm(this);
 			saveRecording.ShowDialog();
 
@@ -235,6 +302,10 @@ namespace Cnthesizer
 		}
 	}
 
+	/// <summary>
+	/// Placeholder IRecorder to be used when we actually don't 
+	/// want to record anything.
+	/// </summary>
 	internal class RecorderPlaceholder : IRecorder
 	{
 		public static RecorderPlaceholder Instance = new RecorderPlaceholder();
@@ -253,14 +324,6 @@ namespace Cnthesizer
 		}
 
 		public bool IsActive => false;
-		public Shift Shift { get; set; }
-		public void AddHarmony(bool manual)
-		{
-		}
-
-		public void AddChord(ChordName chordName, long duration)
-		{
-		}
 
 		public void AddNewEpoch(List<Pitch> frequencies)
 		{
@@ -270,19 +333,7 @@ namespace Cnthesizer
 		{
 		}
 
-		public void PlayChord(ChordName chordName)
-		{
-		}
-
-		public void RegenerateRecording()
-		{
-		}
-
 		public void StartRecording()
-		{
-		}
-
-		public void StopChord()
 		{
 		}
 
@@ -291,9 +342,6 @@ namespace Cnthesizer
 		}
 
 		public void StopRecording()
-		{
-		}
-		public void UpdateScale(Scale scale)
 		{
 		}
 	}

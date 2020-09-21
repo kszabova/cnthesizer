@@ -7,9 +7,9 @@ namespace Cnthesizer
 	partial class ManualHarmonyForm : Form
 	{
 		private long lastElapsedMillis = 0;
-		private IRecorder recorder;
+		private IModifier recorder;
 		private Stopwatch stopwatch;
-		public ManualHarmonyForm(IRecorder recorder)
+		public ManualHarmonyForm(IModifier recorder)
 		{
 			this.recorder = recorder;
 			stopwatch = new Stopwatch();

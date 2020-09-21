@@ -2,6 +2,9 @@
 {
 	public delegate double Shift(double frequency);
 
+	/// <summary>
+	/// Contains methods that shift a tone frequency by a desired interval.
+	/// </summary>
 	public static class Shifts
 	{
 		public static double OctaveUp(double frequency) => frequency * 2;

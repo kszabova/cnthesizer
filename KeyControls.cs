@@ -3,8 +3,14 @@ using System.Windows.Forms;
 
 namespace Cnthesizer
 {
+	/// <summary>
+	/// Specifies which keyboard key corresponds to which Pitch.
+	/// </summary>
 	internal static class KeyControls
 	{
+		/// <summary>
+		/// Returns Pitch corresponding to key.
+		/// </summary>
 		public static Pitch GetPitchFromKey(Keys key)
 		{
 			switch (key)
@@ -51,9 +57,15 @@ namespace Cnthesizer
 			}
 		}
 
+		/// <summary>
+		/// Returns WavePlayer corresponding to key and wave form.
+		/// </summary>
 		public static WavePlayer GetWavePlayerFromKey(Keys key, WaveFormEquation waveForm)
 			=> PitchSelector.GetWavePlayer(GetPitchFromKey(key), waveForm);
 
+		/// <summary>
+		/// Returns WaveFileReader corresponding to key and wave form.
+		/// </summary>
 		public static WaveFileReader GetWaveFileReaderFromKey(Keys key, WaveFormEquation waveForm)
 			=> PitchSelector.GetWaveFileReader(GetPitchFromKey(key), waveForm);
 	}

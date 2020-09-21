@@ -2,11 +2,18 @@
 
 namespace Cnthesizer
 {
+	/// <summary>
+	/// Contains names of all possible chords the app can play.
+	/// </summary>
 	public enum ChordName
 	{
 		ilow, ii, iii, iv, v, vi, vii, ihigh, None
 	}
 
+	/// <summary>
+	/// Stores information about a chord.
+	/// Provides a method to get all Pitches in that chord.
+	/// </summary>
 	public class Chord
 	{
 		private readonly ChordName chordName;
@@ -46,6 +53,11 @@ namespace Cnthesizer
 
 		public List<Pitch> Tones { get; }
 
+		/// <summary>
+		/// Computes the exact tones in the chord
+		/// by taking into account its name and scale.
+		/// </summary>
+		/// <returns>List of Pitches in the chord</returns>
 		public List<Pitch> GetChord()
 		{
 			if (chordName == ChordName.None) return new List<Pitch> { Pitch.Empty };
@@ -68,6 +80,9 @@ namespace Cnthesizer
 		}
 	}
 
+	/// <summary>
+	/// Stores information about a scale.
+	/// </summary>
 	public class Scale
 	{
 		public Pitch Base;

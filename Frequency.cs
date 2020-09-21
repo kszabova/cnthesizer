@@ -5,6 +5,9 @@ using System.IO;
 
 namespace Cnthesizer
 {
+	/// <summary>
+	/// Enum of all posible pitches / tones that can be played
+	/// </summary>
 	public enum Pitch
 	{
 		Empty,
@@ -14,6 +17,9 @@ namespace Cnthesizer
 		A6
 	}
 
+	/// <summary>
+	/// Stores corresponding frequency for each pitch
+	/// </summary>
 	public static class Frequency
 	{
 		private static readonly double Empty = 0;
@@ -66,6 +72,10 @@ namespace Cnthesizer
 		public static double GetFrequency(Pitch pitch) => Freqs[(int)pitch];
 	}
 
+	/// <summary>
+	/// Provides methods to get objects needed for playing sound
+	/// by specifying pitch.
+	/// </summary>
 	public static class PitchSelector
 	{
 		public static readonly List<double> Frequencies;
@@ -77,18 +87,18 @@ namespace Cnthesizer
 		private static readonly List<WaveFileReader> SquareWaveFileReaders = new List<WaveFileReader> { };
 		private static readonly List<WavePlayer> SquareWavePlayers = new List<WavePlayer> { };
 
+		private static string sawtoothPrefix = "saw_";
+
+		private static string sinePrefix = "sine_";
+
+		private static string squarePrefix = "square_";
+
 		private static List<(string, WaveFormEquation)> prefixFormPairs = new List<(string, WaveFormEquation)>
 		{
 			(sinePrefix, WaveForms.SineWave),
 			(squarePrefix, WaveForms.SquareWave),
 			(sawtoothPrefix, WaveForms.SawtoothWave)
 		};
-
-		private static string sawtoothPrefix = "saw_";
-
-		private static string sinePrefix = "sine_";
-
-		private static string squarePrefix = "square_";
 
 		private static List<string> waveFileNames = new List<string>
 		{
@@ -101,8 +111,10 @@ namespace Cnthesizer
 
 		static PitchSelector()
 		{
+			// create files for each pitch
 			foreach (Pitch pitch in EnumeratePitches())
 			{
+				// create a separate file for each wave form
 				foreach ((string, WaveFormEquation) waveForm in prefixFormPairs)
 				{
 					List<WaveFileReader> wfrs = GetFileReaderByWaveForm(waveForm.Item2);
@@ -115,7 +127,7 @@ namespace Cnthesizer
 					}
 					catch (FileNotFoundException)
 					{
-						Wave.CreateWaveFile(filename, pitch, waveForm.Item2, 44100);
+						Wave.CreatePitchWaveFile(filename, pitch, waveForm.Item2, 44100);
 						wfrs.Add(new WaveFileReader(filename));
 					}
 					wps.Add(new WavePlayer(filename));
@@ -123,13 +135,28 @@ namespace Cnthesizer
 			}
 		}
 
+		/// <summary>
+		/// Helper method that yields all values in the Pitch enum
+		/// </summary>
 		public static IEnumerable<Pitch> EnumeratePitches()
 		{
 			foreach (Pitch pitch in Enum.GetValues(typeof(Pitch))) yield return pitch;
 		}
 
+		/// <summary>
+		/// Returns filename corresponding to a pitch without the wave form prefix.
+		/// </summary>
+		/// <param name="pitch">Pitch whose filename we want</param>
+		/// <returns>Filename corresponding to the pitch</returns>
 		public static string GetWaveFilename(Pitch pitch) => waveFileNames[(int)pitch];
 
+		/// <summary>
+		/// Returns WaveFileReader object instance that can read file corresponding
+		/// to the specified pitch and wave form.
+		/// </summary>
+		/// <param name="pitch">Pitch whose instance we want</param>
+		/// <param name="waveForm">Form of the wave</param>
+		/// <returns>WaveFileReader instance</returns>
 		public static WaveFileReader GetWaveFileReader(Pitch pitch, WaveFormEquation waveForm)
 		{
 			string filename = GetWaveFilename(pitch);
@@ -138,6 +165,13 @@ namespace Cnthesizer
 			return fileReader[index];
 		}
 
+		/// <summary>
+		/// Returns WavePlayer object instance that can play file
+		/// corresponding to the specified pitch and wave form.
+		/// </summary>
+		/// <param name="pitch">Pitch whose instance we want</param>
+		/// <param name="waveForm">Form of the wave</param>
+		/// <returns>WavePlayer instance</returns>
 		public static WavePlayer GetWavePlayer(Pitch pitch, WaveFormEquation waveForm)
 		{
 			string filename = GetWaveFilename(pitch);
@@ -146,6 +180,14 @@ namespace Cnthesizer
 			return wavePlayer[index];
 		}
 
+		/// <summary>
+		/// Takes Pitch and number of semitones (can be negative or zero)
+		/// and returns Pitch relative to the input by that number.
+		/// If result is outside of the Pitch range, throws an exception.
+		/// </summary>
+		/// <param name="pitch">Base pitch</param>
+		/// <param name="semitones">Number of semitones that we want to shift</param>
+		/// <returns>Pitch relative to the input</returns>
 		public static Pitch ShiftPitchBySemitones(Pitch pitch, int semitones)
 		{
 			int oldIndex = (int)pitch;

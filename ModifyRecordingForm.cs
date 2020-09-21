@@ -7,15 +7,17 @@ namespace Cnthesizer
 	partial class ModifyRecordingForm : Form
 	{
 		private int bpm;
-		private IRecorder recorder;
+		private IModifier recorder;
 		private bool showMessageWhenHarmonyGenerated = true;
 		private bool showMessageWhenPitchChanged = true;
 
-		public ModifyRecordingForm(IRecorder recorder, int bpm)
+		public ModifyRecordingForm(IModifier recorder, int bpm)
 		{
 			this.recorder = recorder;
 			this.bpm = bpm;
 			InitializeComponent();
+
+			// set ComboBox elements
 			shiftSelectorComboBox.Items.AddRange(new string[]
 			{
 				"Octave up", "Major seventh up", "Minor seventh up", "Major sixth up", "Minor sixth up",
@@ -37,18 +39,22 @@ namespace Cnthesizer
 
 		private void automaticHarmonyButton_Click(object sender, EventArgs e)
 		{
+			// automatic harmony can only be added when beat was specified
+			// (otherwise there is no way to know the correct placement of chords)
 			if (bpm == 0)
 			{
 				MessageBox.Show("You can't add harmony automatically if there is no beat!");
 				return;
 			}
 
+			// user must specify which progression they want generated
 			if (chordProgSelector.SelectedIndex == -1 || (string)chordProgSelector.SelectedItem == "N/A")
 			{
 				MessageBox.Show("You must select a chord progression!");
 				return;
 			}
 
+			// reset harmony and check if it is possible to add a new one
 			try
 			{
 				recorder.AddHarmony(false);
@@ -59,6 +65,7 @@ namespace Cnthesizer
 				return;
 			}
 
+			// get the correct chords from the given chord progression
 			List<ChordName> chords = new List<ChordName> { };
 			switch ((string)chordProgSelector.SelectedItem)
 			{
@@ -115,22 +122,27 @@ namespace Cnthesizer
 					}
 			}
 
+			// a new chord is to be played on every chordFreqTrackBar.Value-th beat
 			int chordFrequency = bpm / chordFreqTrackBar.Value;
-			int oneChordDuration = Convert.ToInt32(1 / ((float)chordFrequency / 60) * 1000);
+			int oneChordDuration = Convert.ToInt32(1 / ((float)chordFrequency / 60) * 1000);	// milliseconds
 
+			// add all chords with the correct duration to harmony
 			foreach (ChordName chord in chords)
 			{
 				recorder.AddChord(chord, oneChordDuration);
 			}
 
+			// generate recording with new harmony
 			recorder.RegenerateRecording();
 
+			// alert user that the process has finished
 			if (showMessageWhenHarmonyGenerated)
 				MessageBox.Show("Done! Hear the result by clicking Play.");
 		}
 
 		private void chordFreqTrackBar_Scroll(object sender, EventArgs e)
 		{
+			// update chord frequency label
 			chordFreqLabel.Text = chordFreqTrackBar.Value.ToString();
 		}
 
@@ -193,6 +205,7 @@ namespace Cnthesizer
 		}
 		private void UpdateScale()
 		{
+			// if no scale has been selected, set the recorder's value of scale to null
 			if ((string)scaleSelector.SelectedItem == "N/A" || (string)majMinSelector.SelectedItem == "N/A"
 				|| scaleSelector.SelectedIndex == -1 || majMinSelector.SelectedIndex == -1)
 			{

@@ -4,14 +4,31 @@ namespace Cnthesizer
 {
 	public delegate short[] WaveFormEquation(double frequency, int length, int sampleRate);
 
+	/// <summary>
+	/// Contains wave transformation methods
+	/// </summary>
 	internal static class WaveForms
 	{
+		/// <summary>
+		/// Generates silence
+		/// </summary>
+		/// <param name="frequency">Only here to fit the definition of WaveFormEquation, can be anything</param>
+		/// <param name="length">Length of the sample</param>
+		/// <param name="sampleRate">Only here to fit the definition of WaveFormEquation, can be anything</param>
+		/// <returns>Sound wave</returns>
 		public static short[] ConstantZero(double frequency, int length, int sampleRate)
 		{
 			short[] wave = new short[length];
 			return wave;
 		}
 
+		/// <summary>
+		/// Generates a sound wave with sawtooth shape
+		/// </summary>
+		/// <param name="frequency">Frequency, determines pitch</param>
+		/// <param name="length">Length of sample</param>
+		/// <param name="sampleRate">Sample rate</param>
+		/// <returns>Sound wave</returns>
 		public static short[] SawtoothWave(double frequency, int length, int sampleRate)
 		{
 			// if frequency is zero, return constant zeros
@@ -40,6 +57,13 @@ namespace Cnthesizer
 			return wave;
 		}
 
+		/// <summary>
+		/// Generates a sound wave with sine shape
+		/// </summary>
+		/// <param name="frequency">Frequency, determines pitch</param>
+		/// <param name="length">Length of sample</param>
+		/// <param name="sampleRate">Sample rate</param>
+		/// <returns>Sound wave</returns>
 		public static short[] SineWave(double frequency, int length, int sampleRate)
 		{
 			short[] wave = new short[length];
@@ -51,6 +75,13 @@ namespace Cnthesizer
 			return wave;
 		}
 
+		/// <summary>
+		/// Generates a sound wave with square shape
+		/// </summary>
+		/// <param name="frequency">Frequency, determines pitch</param>
+		/// <param name="length">Length of sample</param>
+		/// <param name="sampleRate">Sample rate</param>
+		/// <returns>Sound wave</returns>
 		public static short[] SquareWave(double frequency, int length, int sampleRate)
 		{
 			short[] wave = new short[length];

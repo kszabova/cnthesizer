@@ -2,6 +2,11 @@
 
 namespace Cnthesizer
 {
+	/// <summary>
+	/// One instance of this class holds information
+	/// about tones being played at the same time
+	/// and their duration.
+	/// </summary>
 	internal class Epoch
 	{
 		private Epoch(long duration, List<Pitch> frequencies)
