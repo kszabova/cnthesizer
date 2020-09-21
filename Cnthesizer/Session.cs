@@ -185,7 +185,7 @@ namespace Cnthesizer
 			recorder = RecorderPlaceholder.Instance;
 		}
 
-		private List<Pitch> GetFrequenciesPlaying()
+		internal List<Pitch> GetFrequenciesPlaying()
 		{
 			List<Pitch> frequenciesPlaying = new List<Pitch> { };
 			foreach (Pitch frequency in PitchSelector.EnumeratePitches())
