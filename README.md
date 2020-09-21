@@ -15,6 +15,8 @@ Alternatively, it is possible to download the code and build the project on your
 
 The main feature of the app (and in fact of everything that wants to pass as a musical instrument) is the ability to play different sounds. In this case, the different sounds are different tones. Playing them is done through the keyboard Each tone from A3 to A6 has a designated key. The precise layout is the following:
 
+![](keyslayout.jpg)
+
 
 ### Changing wave shape
 
